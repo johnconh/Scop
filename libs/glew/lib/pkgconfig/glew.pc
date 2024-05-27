@@ -1,0 +1,11 @@
+prefix=/home/jdasilva/Desktop/Scop/libs/glew
+exec_prefix=${prefix}
+libdir=/home/jdasilva/Desktop/Scop/libs/glew/lib
+includedir=${prefix}/include
+
+Name: glew
+Description: The OpenGL Extension Wrangler library
+Version: 2.1.0
+Cflags: -I${includedir} 
+Libs: -L${libdir} -lGLEW
+Requires: glu
