@@ -1,4 +1,4 @@
-#include "../libs/glew/include/GL/glecddw.h"
+#include "../libs/glew/include/GL/glew.h"
 #include <GLFW/glfw3.h>
 #include <stdio.h>
 #include <stdlib.h>
