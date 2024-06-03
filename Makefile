@@ -1,9 +1,8 @@
 NAME = scop
 
 CXX = g++
-CXXFLAGS = -std=c++11 -Wall -Werror -Wextra -Ilibs/glew/include -DGLEW_STATIC
-LDFLAGS =-Llibs/glew/lib -lGLEW -lGLU -lglfw -lGL -lX11 -lXrandr -lpthread -lXi -ldl
-
+CXXFLAGS = -std=c++11 -Wall -Werror -Wextra -Ilibs/glew/include -DGLEW_STATIC -I./inc
+LDFLAGS =-Llibs/glew/lib -lGLEW -lGLU -lglfw -lGL -lX11 -lXrandr -lpthread -lXi -ldl -Wl,-rpath=libs/glew/lib
 SRC_DIR = src
 OBJ_DIR = obj
 BIN_DIR = bin
@@ -16,6 +15,7 @@ EXECUTABLE = $(BIN_DIR)/$(NAME)
 DEF_COLOR = \033[0;39m
 GREEN = \033[0;92m
 YELLOW = \033[0;93m
+BLUE = \033[0;94m
 
 all: $(EXECUTABLE)
 
@@ -31,10 +31,11 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	@echo "$(GREEN)Done!$(DEF_COLOR)"
 
 run: $(EXECUTABLE)
-	@LD_LIBRARY_PATH=$(LD_LIBRARY_PATH):$(PWD)/libs/glew/lib $(EXECUTABLE)
+	@./$(EXECUTABLE)
 
 clean:
 	@rm -rf $(OBJ_DIR)
+	@rm -f scop.sh
 	@echo "$(YELLOW)$(NAME) object files removed!$(DEF_COLOR)"
 
 fclean: clean	
