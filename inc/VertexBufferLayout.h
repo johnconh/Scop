@@ -3,7 +3,6 @@
 #include "Renderer.h"
 #include <iostream>
 
-
 struct VertexBufferElement
 {
     unsigned int type;
