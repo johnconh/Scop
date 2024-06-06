@@ -58,12 +58,12 @@ int main() {
         2, 3, 0
     };
 
-    unsigned int vao;
-    GLCall(glGenVertexArrays(1, &vao));
-    GLCall(glBindVertexArray(vao));
+    GLCall(glEnable(GL_BLEND));
+    GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 
     VertexArray va;
     VertexBuffer vb(position, 4 * 4 * sizeof(float));
+
     VertexBufferLayout layout;
     layout.Push<float>(2);
     layout.Push<float>(2);
