@@ -8,6 +8,7 @@
 #include "../inc/Shader.h"
 #include "../inc/VertexBufferLayout.h"
 #include "../inc/Texture.h"
+#include "../inc/glm/gtc/matrix_transform.hpp"
 
 int main() {
     
@@ -22,7 +23,7 @@ int main() {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     // Crear una ventana GLFW
-    GLFWwindow* window = glfwCreateWindow(800, 600, "OpenGL Window", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(960, 540, "OpenGL Window", NULL, NULL);
     if (!window) {
         std::cerr << "Error al crear la ventana GLFW\n";
         glfwTerminate();
@@ -45,12 +46,12 @@ int main() {
         glfwTerminate();
         return -1;
     }
-
+ 
     float position[] = {
-        -0.5f, -0.5f, 0.0f, 0.0f, // 0
-        0.5f, -0.5f, 1.0f, 0.0f,// 1
-        0.5f, 0.5f, 1.0f, 1.0f,// 2
-        -0.5f, 0.5f, 0.0f, 1.0f // 3
+        -50.0f, -50.0f, 0.0f, 0.0f, // 0
+        50.0f, -50.0f, 1.0f, 0.0f,// 1
+        50.0f, 50.0f, 1.0f, 1.0f,// 2
+        -50.0f, 50.0f, 0.0f, 1.0f // 3
     };
 
     unsigned int indices[] = {
@@ -71,6 +72,12 @@ int main() {
     
     IndexBuffer ibo(indices, 6);
 
+    glm::mat4 proj = glm::ortho(0.0f, 960.0f, 0.0f, 540.0f, -1.0f, 1.0f);
+    glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));
+    //glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(200, 200, 0));
+
+    //glm::mat4 mvp = proj * view * model;
+
     Shader shader("res/shaders/Basic.shader");
     shader.Bind();
     shader.SetUniform4f("u_Color", 0.8f, 0.3f, 0.8f, 1.0f);
@@ -86,6 +93,9 @@ int main() {
 
     Renderer renderer;
 
+    glm::vec3 translationA(200, 200, 0);
+    glm::vec3 translationB(400, 200, 0);
+
     float r = 0.0f;
     float increment = 0.05f;
     /* Loop until the user closes the window */
@@ -93,11 +103,24 @@ int main() {
     {
         /* Render here */
         renderer.Clear();
+        {
+            glm::mat4 model = glm::translate(glm::mat4(1.0f), translationA);
+            glm::mat4 mvp = proj * view * model;
+            shader.Bind();
+            shader.SetUniform4f("u_Color", r, 0.3f, 0.8f, 1.0f);
+            shader.SetUniformMat4f("u_MVP", mvp);
+            renderer.Draw(va, ibo, shader);
+        }
 
-        shader.Bind();
-        shader.SetUniform4f("u_Color", r, 0.3f, 0.8f, 1.0f);
+        {
+            glm::mat4 model = glm::translate(glm::mat4(1.0f), translationB);
+            glm::mat4 mvp = proj * view * model;
+            shader.Bind();
+            shader.SetUniform4f("u_Color", r, 0.3f, 0.8f, 1.0f);
+            shader.SetUniformMat4f("u_MVP", mvp);
+            renderer.Draw(va, ibo, shader);
+        }
 
-        renderer.Draw(va, ibo, shader);
 
         if (r > 1.0f)
             increment = -0.05f;
