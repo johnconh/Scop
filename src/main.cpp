@@ -9,6 +9,9 @@
 #include "../inc/VertexBufferLayout.h"
 #include "../inc/Texture.h"
 #include "../inc/glm/gtc/matrix_transform.hpp"
+#include "../inc/imgui/imgui.h"
+#include "../inc/imgui/imgui_impl_glfw.h"
+#include "../inc/imgui/imgui_impl_opengl3.h"
 
 int main() {
     
@@ -93,6 +96,13 @@ int main() {
 
     Renderer renderer;
 
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init("#version 130");
+    ImGui::StyleColorsDark();
+
     glm::vec3 translationA(200, 200, 0);
     glm::vec3 translationB(400, 200, 0);
 
@@ -101,6 +111,7 @@ int main() {
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
+
         /* Render here */
         renderer.Clear();
         {
@@ -121,20 +132,34 @@ int main() {
             renderer.Draw(va, ibo, shader);
         }
 
-
         if (r > 1.0f)
             increment = -0.05f;
         else if (r < 0.0f)
             increment = 0.05f;
         r += increment;
 
-        /* Swap front and back buffers */
-        glfwSwapBuffers(window);
+        ImGui_ImplOpenGL3_NewFrame();  
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
 
-        /* Poll for and process events */
+        {
+            ImGui::Begin("Translation");
+            ImGui::SliderFloat3("Translation A", &translationA.x, 0.0f, 960.0f);
+            ImGui::SliderFloat3("Translation B", &translationB.x, 0.0f, 960.0f);
+            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+            ImGui::End();
+        }
+
+        ImGui::EndFrame();
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+        glfwSwapBuffers(window);
         glfwPollEvents();
     }
-    // Cerrar GLFW y terminar
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
     glfwTerminate();
     return 0;
 }
