@@ -12,6 +12,7 @@
 #include "../inc/imgui/imgui.h"
 #include "../inc/imgui/imgui_impl_glfw.h"
 #include "../inc/imgui/imgui_impl_opengl3.h"
+#include "../inc/test/TestClearColor.h"
 
 int main() {
     
@@ -33,16 +34,12 @@ int main() {
         return -1;
     }
 
-    // Hacer que la ventana sea el contexto actual
     glfwMakeContextCurrent(window);
-    
     //glfwSwapInterval(1); // Habilitar VSync
 
-    // Verificar si GLEW está disponible
     std::cout << "GLEW versión: " << glewGetString(GLEW_VERSION) << std::endl;
     std::cout << "OpenGL versión: " << glGetString(GL_VERSION) << std::endl;
 
-    // Inicializar GLEW después de haber creado el contexto OpenGL
     GLenum err = glewInit();
     if (err != GLEW_OK) {
         std::cerr << "Error al inicializar GLEW: " << glewGetErrorString(err) << std::endl;
@@ -77,9 +74,6 @@ int main() {
 
     glm::mat4 proj = glm::ortho(0.0f, 960.0f, 0.0f, 540.0f, -1.0f, 1.0f);
     glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));
-    //glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(200, 200, 0));
-
-    //glm::mat4 mvp = proj * view * model;
 
     Shader shader("res/shaders/Basic.shader");
     shader.Bind();
@@ -102,6 +96,9 @@ int main() {
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 130");
     ImGui::StyleColorsDark();
+
+    test::TestClearColor test;
+
 
     glm::vec3 translationA(200, 200, 0);
     glm::vec3 translationB(400, 200, 0);
@@ -138,6 +135,8 @@ int main() {
             increment = 0.05f;
         r += increment;
 
+        test.OnUpdate(0.0f);
+        test.OnRender();
         ImGui_ImplOpenGL3_NewFrame();  
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
@@ -146,6 +145,7 @@ int main() {
             ImGui::Begin("Translation");
             ImGui::SliderFloat3("Translation A", &translationA.x, 0.0f, 960.0f);
             ImGui::SliderFloat3("Translation B", &translationB.x, 0.0f, 960.0f);
+             test.OnImGuiRender();
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
             ImGui::End();
         }
