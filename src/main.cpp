@@ -29,7 +29,13 @@ int main(int argc, char **argv)
     }
 
     std::string objFile = argv[1];
+    if(objFile.substr(objFile.find_last_of(".") + 1) != "obj")
+    {
+        std::cerr << "Invalid file format. Please provide a .obj file" << std::endl;
+        return -1;
+    }
     std:: string mtlFile;
+
 
     if(!glfwInit())
     {
