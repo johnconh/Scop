@@ -14,8 +14,21 @@
 # define OBJLOADER_H
 
 #include <vector>
-#include "../inc/glm/glm.hpp"
+#include <string>
+#include <unordered_map>
 
-bool loadOBJ(const char * path, std::vector<glm::vec3> & out_vertices, std::vector<glm::vec2> & out_uvs);
+struct Vertex
+{
+    float x, y, z;
+
+};
+
+struct Face
+{
+    std::vector<unsigned int> v;
+};
+
+
+void loadOBJ(const char * path, std::vector<Vertex> & out_vertices, std::vector<Face> & out_uvs);
 
 #endif
