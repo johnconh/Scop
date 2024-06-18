@@ -21,7 +21,7 @@
 #include "../inc/Shader.h"
 #include <iomanip>
 
-const GLuint WIDTH = 800, HEIGHT = 600;
+const GLuint WIDTH = 1080, HEIGHT = 720;
 void checkGLError()
 {
     GLenum err;
