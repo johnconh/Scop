@@ -79,45 +79,25 @@ int main(int argc, char **argv)
     std::vector<Vertex> vertices;
     std::vector<Face> faces;
     loadOBJ(objFile.c_str(), vertices, faces);
-    std::vector<float> vertexData;
+    std::vector<float> vertexData ;
     for(const Face& face : faces)
     {
-        for(unsigned int v : face.v)
+        for(size_t i = 0; i < face.v.size() - 2; i++)
         {
-            vertexData.push_back(vertices[v - 1].x);
-            vertexData.push_back(vertices[v - 1].y);
-            vertexData.push_back(vertices[v - 1].z);
+            vertexData.push_back(vertices[face.v[0] - 1].x);
+            vertexData.push_back(vertices[face.v[0] - 1].y);
+            vertexData.push_back(vertices[face.v[0] - 1].z);
+
+            vertexData.push_back(vertices[face.v[i + 1] - 1].x);
+            vertexData.push_back(vertices[face.v[i + 1] - 1].y);
+            vertexData.push_back(vertices[face.v[i + 1] - 1].z);
+
+            vertexData.push_back(vertices[face.v[i + 2] - 1].x);
+            vertexData.push_back(vertices[face.v[i + 2] - 1].y);
+            vertexData.push_back(vertices[face.v[i + 2] - 1].z);
         }
     }
 
-    // std::cout << "First 5 sets of vertex data:" << std::endl;
-    // std::cout << std::fixed << std::setprecision(6);
-    // for (size_t i = 0; i < 5 * 3 && i < vertexData.size(); i += 3) { // Each vertex has 3 components (x, y, z)
-    //     std::cout << "Vertex " << i / 3 << ": ("
-    //               << vertexData[i] << ", "
-    //               << vertexData[i + 1] << ", "
-    //               << vertexData[i + 2] << ")" << std::endl;
-    // }
-
-    // // Print first 5 faces and their corresponding vertices for debugging
-    // std::cout << "First 5 faces and their corresponding vertices:" << std::endl;
-    // for (size_t i = 0; i < 5 && i < faces.size(); ++i) {
-    //     const Face& face = faces[i];
-    //     std::cout << "Face " << i << ": ";
-    //     for (unsigned int index : face.v) {
-    //         std::cout << index << " ";
-    //     }
-    //     std::cout << std::endl;
-
-    //     for (unsigned int index : face.v) {
-    //         const Vertex& vertex = vertices[index - 1];
-    //         std::cout << "Vertex " << index << ": ("
-    //                   << vertex.x << ", "
-    //                   << vertex.y << ", "
-    //                   << vertex.z << ")" << std::endl;
-    //     }
-    //     std::cout << std::endl;
-    // }
 
     GLuint shaderProgram = createShaderProgram("res/shaders/vertexShader.glsl", "res/shaders/fragmentShader.glsl");
 
@@ -138,16 +118,22 @@ int main(int argc, char **argv)
 
     
     GLuint modelLoc = glGetUniformLocation(shaderProgram, "model");
+    GLint viewLoc = glGetUniformLocation(shaderProgram, "view");
+    GLint projLoc = glGetUniformLocation(shaderProgram, "projection");
 
     while(!glfwWindowShouldClose(window))
     {
         float rotationAngle = glfwGetTime();
         glm::mat4 model = glm::rotate(glm::mat4(1.0f), rotationAngle, glm::vec3(0.0f, 1.0f, 0.0f));
+        glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
+        glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 0.0f, 5.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         CHECK_GL_ERROR(glClear(GL_COLOR_BUFFER_BIT));
 
         CHECK_GL_ERROR(glBindVertexArray(VAO));
         CHECK_GL_ERROR(glUseProgram(shaderProgram));
         CHECK_GL_ERROR(glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)));
+        CHECK_GL_ERROR(glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view)));
+        CHECK_GL_ERROR(glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection)));
         CHECK_GL_ERROR(glDrawArrays(GL_TRIANGLES, 0, vertexData.size() / 3));
         glfwSwapBuffers(window);
         glfwPollEvents();

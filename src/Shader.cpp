@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <vector>
 
 std::string readShaderFile(const char* filePath)
 {
@@ -25,13 +26,15 @@ GLuint createShaderProgram(const char* vertexFilePath, const char* fragmentFileP
     glShaderSource(vertexShader, 1, &vertexShaderSourceCStr, NULL);
     glCompileShader(vertexShader);
 
-    GLint success;
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-    if (!success)
+    GLint result = GL_FALSE;
+    int logLength;
+    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &result);
+    glGetShaderiv(vertexShader, GL_INFO_LOG_LENGTH, &logLength);
+    if (logLength > 0)
     {
-        char infoLog[512];
-        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-        std::cerr << "Error compiling vertex shader: " << infoLog << std::endl;
+        std::vector<char> vertexShaderErrorMessage(logLength + 1);
+        glGetShaderInfoLog(vertexShader, logLength, NULL, &vertexShaderErrorMessage[0]);
+        std::cerr << &vertexShaderErrorMessage[0] << std::endl;
     }
 
     std::string fragmentShaderSource = readShaderFile(fragmentFilePath);
@@ -41,12 +44,13 @@ GLuint createShaderProgram(const char* vertexFilePath, const char* fragmentFileP
     glShaderSource(fragmentShader, 1, &fragmentShaderSourceCStr, NULL);
     glCompileShader(fragmentShader);
 
-    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-    if (!success)
+    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &result);
+    glGetShaderiv(fragmentShader, GL_INFO_LOG_LENGTH, &logLength);
+    if (logLength > 0)
     {
-        char infoLog[512];
-        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-        std::cerr << "Error compiling fragment shader: " << infoLog << std::endl;
+        std::vector<char> fragmentShaderErrorMessage(logLength + 1);
+        glGetShaderInfoLog(fragmentShader, logLength, NULL, &fragmentShaderErrorMessage[0]);
+        std::cerr << &fragmentShaderErrorMessage[0] << std::endl;
     }
 
     GLuint shaderProgram = glCreateProgram();
@@ -54,13 +58,17 @@ GLuint createShaderProgram(const char* vertexFilePath, const char* fragmentFileP
     glAttachShader(shaderProgram, fragmentShader);
     glLinkProgram(shaderProgram);
 
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    if (!success)
+    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &result);
+    glGetProgramiv(shaderProgram, GL_INFO_LOG_LENGTH, &logLength);
+    if (logLength > 0)
     {
-        char infoLog[512];
-        glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-        std::cerr << "Error linking shader program: " << infoLog << std::endl;
+        std::vector<char> programErrorMessage(logLength + 1);
+        glGetProgramInfoLog(shaderProgram, logLength, NULL, &programErrorMessage[0]);
+        std::cerr << &programErrorMessage[0] << std::endl;
     }
+
+    glDetachShader(shaderProgram, vertexShader);
+    glDetachShader(shaderProgram, fragmentShader);
 
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
