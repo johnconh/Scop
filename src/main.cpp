@@ -135,7 +135,7 @@ int main(int argc, char **argv)
     CHECK_GL_ERROR(glBindBuffer(GL_ARRAY_BUFFER, 0));
     CHECK_GL_ERROR(glBindVertexArray(0));
 
-    glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(45.0f), 1080.0f / 720.0f, 0.1f, 100.0f);
     glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -5.0f));
     glm::mat4 model = glm::mat4(1.0f);
 
