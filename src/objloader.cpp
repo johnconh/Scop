@@ -44,45 +44,40 @@ void loadMTL(const char * path, Material & out_materials)
         }
         else if (type == "Ns")
         {
-            double Ns;
+            float Ns;
             iss >> Ns;
             out_materials.Ns = Ns;
         }
         else if (type == "Ni")
         {
-            double Ni;
+            float Ni;
             iss >> Ni;
             out_materials.Ni = Ni;
         }
         else if (type == "d")
         {
-            double d;
+            float d;
             iss >> d;
             out_materials.d = d;
         }
         else if (type == "Ka")
         {
-            double r, g, b;
+            float r, g, b;
             iss >> r >> g >> b;
-            out_materials.Ka[0] = r;
-            out_materials.Ka[1] = g;
-            out_materials.Ka[2] = b;
+            out_materials.Ka = glm::vec3(r, g, b);
         }
         else if (type == "Kd")
         {
-            double r, g, b;
+            float r, g, b;
             iss >> r >> g >> b;
-            out_materials.Kd[0] = r; 
-            out_materials.Kd[1] = g;
-            out_materials.Kd[2] = b;
+            out_materials.Kd = glm::vec3(r, g, b);
+
         }
         else if (type == "Ks")
         {   
-            double r, g, b;
+            float r, g, b;
             iss >> r >> g >> b;
-            out_materials.Ks[0] = r;
-            out_materials.Ks[1] = g;
-            out_materials.Ks[2] = b;
+            out_materials.Ks = glm::vec3(r, g, b);
         }
         else if (type == "illum")
         {

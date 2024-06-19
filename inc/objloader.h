@@ -32,12 +32,12 @@ struct Face
 struct Material
 {
     std::string name = "";
-    double Ns;
-    double Ni;
-    double d;
-    double Ka[3];
-    double Kd[3];
-    double Ks[3];
+    float Ns;
+    float Ni;
+    float d;
+    glm::vec3 Ka;
+    glm::vec3 Kd;
+    glm::vec3 Ks;
     int illum;
 };
 

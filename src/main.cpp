@@ -72,57 +72,36 @@ int main(int argc, char **argv)
     Material materials;
     loadOBJ(objFile.c_str(), vertices, faces, materials);
     std::vector<float> vertexData;
-    std::vector<float> colorData;
-    for(size_t faceIndex = 0; faceIndex < faces.size(); faceIndex++)
+    for(const auto &face : faces)
     {
-        const Face& face = faces[faceIndex];
-
-        float r = static_cast <float> (faceIndex % 3 == 0);
-        float g = static_cast <float> (faceIndex % 3 == 1);
-        float b = static_cast <float> (faceIndex % 3 == 2);
-    
         for(size_t i = 0; i < face.v.size() - 2; i++)
         {
             vertexData.push_back(vertices[face.v[0] - 1].x);
             vertexData.push_back(vertices[face.v[0] - 1].y);
             vertexData.push_back(vertices[face.v[0] - 1].z);
-            colorData.push_back(r);
-            colorData.push_back(g);
-            colorData.push_back(b);
 
             vertexData.push_back(vertices[face.v[i + 1] - 1].x);
             vertexData.push_back(vertices[face.v[i + 1] - 1].y);
             vertexData.push_back(vertices[face.v[i + 1] - 1].z);
-            colorData.push_back(r);
-            colorData.push_back(g);
-            colorData.push_back(b);
 
             vertexData.push_back(vertices[face.v[i + 2] - 1].x);
             vertexData.push_back(vertices[face.v[i + 2] - 1].y);
             vertexData.push_back(vertices[face.v[i + 2] - 1].z);
-            colorData.push_back(r);
-            colorData.push_back(g);
-            colorData.push_back(b);
         }
     }
-
+    
     GLuint shaderProgram = createShaderProgram("res/shaders/vertexShader.glsl", "res/shaders/fragmentShader.glsl");
 
-    GLuint VBO[2], VAO;
+    GLuint VBO, VAO;
     CHECK_GL_ERROR(glGenVertexArrays(1, &VAO));
-    CHECK_GL_ERROR(glGenBuffers(2, VBO));
+    CHECK_GL_ERROR(glGenBuffers(1, &VBO));
 
     CHECK_GL_ERROR(glBindVertexArray(VAO));
 
-    CHECK_GL_ERROR(glBindBuffer(GL_ARRAY_BUFFER, VBO[0]));
+    CHECK_GL_ERROR(glBindBuffer(GL_ARRAY_BUFFER, VBO));
     CHECK_GL_ERROR(glBufferData(GL_ARRAY_BUFFER, vertexData.size() * sizeof(float), vertexData.data(), GL_STATIC_DRAW));
     CHECK_GL_ERROR(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0));
     CHECK_GL_ERROR(glEnableVertexAttribArray(0));
-
-    CHECK_GL_ERROR(glBindBuffer(GL_ARRAY_BUFFER, VBO[1]));
-    CHECK_GL_ERROR(glBufferData(GL_ARRAY_BUFFER, colorData.size() * sizeof(float), colorData.data(), GL_STATIC_DRAW));
-    CHECK_GL_ERROR(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0));
-    CHECK_GL_ERROR(glEnableVertexAttribArray(1));
 
     CHECK_GL_ERROR(glBindBuffer(GL_ARRAY_BUFFER, 0));
     CHECK_GL_ERROR(glBindVertexArray(0));
@@ -152,6 +131,13 @@ int main(int argc, char **argv)
         CHECK_GL_ERROR(glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)));
         CHECK_GL_ERROR(glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view)));
         CHECK_GL_ERROR(glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection)));
+        CHECK_GL_ERROR(glUniform1f(glGetUniformLocation(shaderProgram, "material.Ns"), materials.Ns));
+        CHECK_GL_ERROR(glUniform1f(glGetUniformLocation(shaderProgram, "material.Ni"), materials.Ni));
+        CHECK_GL_ERROR(glUniform1f(glGetUniformLocation(shaderProgram, "material.d"), materials.d));
+        CHECK_GL_ERROR(glUniform3fv(glGetUniformLocation(shaderProgram, "material.Ka"), 1, glm::value_ptr(materials.Ka)));
+        CHECK_GL_ERROR(glUniform3fv(glGetUniformLocation(shaderProgram, "material.Kd"), 1, glm::value_ptr(materials.Kd)));
+        CHECK_GL_ERROR(glUniform3fv(glGetUniformLocation(shaderProgram, "material.Ks"), 1, glm::value_ptr(materials.Ks)));
+        CHECK_GL_ERROR(glUniform1i(glGetUniformLocation(shaderProgram, "material.illum"), materials.illum));
 
         CHECK_GL_ERROR(glBindVertexArray(VAO));
         CHECK_GL_ERROR(glDrawArrays(GL_TRIANGLES, 0, vertexData.size() / 3));
@@ -161,7 +147,7 @@ int main(int argc, char **argv)
     }
 
     CHECK_GL_ERROR(glDeleteVertexArrays(1, &VAO));
-    CHECK_GL_ERROR(glDeleteBuffers(2, VBO));
+    CHECK_GL_ERROR(glDeleteBuffers(1, &VBO));
     CHECK_GL_ERROR(glDeleteProgram(shaderProgram));
     glfwTerminate();
     return 0;
