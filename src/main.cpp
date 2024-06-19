@@ -12,24 +12,15 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include  "../inc/glm/glm.hpp"
-#include  "../inc/glm/gtc/matrix_transform.hpp"
-#include  "../inc/glm/gtc/type_ptr.hpp"
 #include <iostream>
+#include "../inc/glm/glm.hpp"
+#include "../inc/glm/gtc/matrix_transform.hpp"
+#include "../inc/glm/gtc/type_ptr.hpp"
 #include "../inc/objloader.h"
 #include "../inc/checkGLError.h"
 #include "../inc/Shader.h"
-#include <iomanip>
 
 const GLuint WIDTH = 1080, HEIGHT = 720;
-void checkGLError()
-{
-    GLenum err;
-    while((err = glGetError()) != GL_NO_ERROR)
-    {
-        std::cerr << "OpenGL error: " << err << std::endl;
-    }
-}
 
 int main(int argc, char **argv)
 {
@@ -78,7 +69,8 @@ int main(int argc, char **argv)
 
     std::vector<Vertex> vertices;
     std::vector<Face> faces;
-    loadOBJ(objFile.c_str(), vertices, faces);
+    Material materials;
+    loadOBJ(objFile.c_str(), vertices, faces, materials);
     std::vector<float> vertexData;
     std::vector<float> colorData;
     for(size_t faceIndex = 0; faceIndex < faces.size(); faceIndex++)
@@ -136,7 +128,7 @@ int main(int argc, char **argv)
     CHECK_GL_ERROR(glBindVertexArray(0));
 
     glm::mat4 projection = glm::perspective(glm::radians(45.0f), 1080.0f / 720.0f, 0.1f, 100.0f);
-    glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -5.0f));
+    glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -10.0f));
     glm::mat4 model = glm::mat4(1.0f);
 
     while(!glfwWindowShouldClose(window))

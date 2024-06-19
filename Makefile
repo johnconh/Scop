@@ -1,7 +1,7 @@
 NAME = scop
 
 CXX = g++
-CXXFLAGS = -std=c++11 -Wall -Werror -Wextra -Ilibs/glew/include -DGLEW_STATIC -I./inc
+CXXFLAGS = -std=c++17 -Wall -Werror -Wextra -Ilibs/glew/include -DGLEW_STATIC -I./inc
 LDFLAGS =-Llibs/glew/lib -lGLEW -lGLU -lglfw -lGL -lX11 -lXrandr -lpthread -lXi -ldl -Wl,-rpath=libs/glew/lib
 SRC_DIR = src
 OBJ_DIR = obj

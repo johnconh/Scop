@@ -16,6 +16,7 @@
 #include <vector>
 #include <string>
 #include <unordered_map>
+#include <glm/glm.hpp>
 
 struct Vertex
 {
@@ -28,7 +29,17 @@ struct Face
     std::vector<unsigned int> v;
 };
 
+struct Material
+{
+    std::string name = "";
+    double Ns;
+    double Ni;
+    double d;
+    double Ka[3];
+    double Kd[3];
+    double Ks[3];
+    int illum;
+};
 
-void loadOBJ(const char * path, std::vector<Vertex> & out_vertices, std::vector<Face> & out_uvs);
-
+void loadOBJ(const char * path, std::vector<Vertex> & out_vertices, std::vector<Face> & out_uvs, Material & out_materials);
 #endif

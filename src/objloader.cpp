@@ -15,8 +15,95 @@
 #include <iostream>
 #include <sstream>
 #include <iomanip>
+#include <filesystem>
+#include <iomanip>
 
-void loadOBJ(const char * path, std::vector<Vertex> & out_vertices, std::vector<Face> & out_faces)
+void loadMTL(const char * path, Material & out_materials)
+{
+    std::filesystem::path p(path);
+    p.replace_extension(".mtl");
+
+    std::ifstream file(p.string());
+    if (!file.is_open())
+    {
+        std::cerr << "Failed to open file" << std::endl;
+        return;
+    }
+
+    std::string line;
+    while(std::getline(file, line))
+    {
+        std::istringstream iss(line);
+        std::string type;
+        iss >> type;
+        if (type == "newmtl")
+        {
+            std::string name;
+            iss >> name;
+            out_materials.name = name;
+        }
+        else if (type == "Ns")
+        {
+            double Ns;
+            iss >> Ns;
+            out_materials.Ns = Ns;
+        }
+        else if (type == "Ni")
+        {
+            double Ni;
+            iss >> Ni;
+            out_materials.Ni = Ni;
+        }
+        else if (type == "d")
+        {
+            double d;
+            iss >> d;
+            out_materials.d = d;
+        }
+        else if (type == "Ka")
+        {
+            double r, g, b;
+            iss >> r >> g >> b;
+            out_materials.Ka[0] = r;
+            out_materials.Ka[1] = g;
+            out_materials.Ka[2] = b;
+        }
+        else if (type == "Kd")
+        {
+            double r, g, b;
+            iss >> r >> g >> b;
+            out_materials.Kd[0] = r; 
+            out_materials.Kd[1] = g;
+            out_materials.Kd[2] = b;
+        }
+        else if (type == "Ks")
+        {   
+            double r, g, b;
+            iss >> r >> g >> b;
+            out_materials.Ks[0] = r;
+            out_materials.Ks[1] = g;
+            out_materials.Ks[2] = b;
+        }
+        else if (type == "illum")
+        {
+            int illum;
+            iss >> illum;
+            out_materials.illum = illum;
+        }
+    }
+
+    // std::cout << std::fixed << std::setprecision(6);
+    // std::cout << "Material name: " << out_materials.name << std::endl;
+    // std::cout << "Ns: " << out_materials.Ns << std::endl;
+    // std::cout << "Ni: " << out_materials.Ni << std::endl;
+    // std::cout << "d: " << out_materials.d << std::endl;
+    // std::cout << "Ka: " << out_materials.Ka[0] << ", " << out_materials.Ka[1] << ", " << out_materials.Ka[2] << std::endl;
+    // std::cout << "Kd: " << out_materials.Kd[0] << ", " << out_materials.Kd[1] << ", " << out_materials.Kd[2] << std::endl;
+    // std::cout << "Ks: " << out_materials.Ks[0] << ", " << out_materials.Ks[1] << ", " << out_materials.Ks[2] << std::endl;
+    // std::cout << "illum: " << out_materials.illum << std::endl;
+}
+
+void loadOBJ(const char * path, std::vector<Vertex> & out_vertices, std::vector<Face> & out_faces, Material & out_materials)
 {
     std::ifstream file(path);
     if (!file.is_open())
@@ -45,8 +132,11 @@ void loadOBJ(const char * path, std::vector<Vertex> & out_vertices, std::vector<
                 face.v.push_back(v);
             out_faces.push_back(face);
         }
+        else if (type == "usemtl")
+        {
+            loadMTL(path, out_materials);
+        }
     }
-
 
 
     // std::cout << "Loaded " << out_vertices.size() << " vertices" << std::endl;
