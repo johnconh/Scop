@@ -1,5 +1,6 @@
 #version 330 core
 
+in vec3 ourColor;
 struct Material
 {
     float Ni;
@@ -49,5 +50,5 @@ void main()
         color = ambient + diffuse + specular;
     }
 
-    FragColor = vec4(color, material.d);
+    FragColor = vec4(color * ourColor, 1);
 }

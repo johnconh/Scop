@@ -72,36 +72,57 @@ int main(int argc, char **argv)
     Material materials;
     loadOBJ(objFile.c_str(), vertices, faces, materials);
     std::vector<float> vertexData;
-    for(const auto &face : faces)
+    std::vector<float> colorData;
+    for(size_t faceIndex = 0; faceIndex < faces.size(); faceIndex++)
     {
+        const Face &face = faces[faceIndex];
+        float r = static_cast <float> (faceIndex % 3 == 0);
+        float g = static_cast <float> (faceIndex % 3 == 1);
+        float b = static_cast <float> (faceIndex % 3 == 2);
+
         for(size_t i = 0; i < face.v.size() - 2; i++)
         {
             vertexData.push_back(vertices[face.v[0] - 1].x);
             vertexData.push_back(vertices[face.v[0] - 1].y);
             vertexData.push_back(vertices[face.v[0] - 1].z);
+            colorData.push_back(r);
+            colorData.push_back(g);
+            colorData.push_back(b);
 
             vertexData.push_back(vertices[face.v[i + 1] - 1].x);
             vertexData.push_back(vertices[face.v[i + 1] - 1].y);
             vertexData.push_back(vertices[face.v[i + 1] - 1].z);
+            colorData.push_back(r);
+            colorData.push_back(g);
+            colorData.push_back(b);
 
             vertexData.push_back(vertices[face.v[i + 2] - 1].x);
             vertexData.push_back(vertices[face.v[i + 2] - 1].y);
             vertexData.push_back(vertices[face.v[i + 2] - 1].z);
+            colorData.push_back(r);
+            colorData.push_back(g);
+            colorData.push_back(b);
         }
     }
     
     GLuint shaderProgram = createShaderProgram("res/shaders/vertexShader.glsl", "res/shaders/fragmentShader.glsl");
 
-    GLuint VBO, VAO;
+    GLuint VBO[2], VAO;
     CHECK_GL_ERROR(glGenVertexArrays(1, &VAO));
-    CHECK_GL_ERROR(glGenBuffers(1, &VBO));
+    CHECK_GL_ERROR(glGenBuffers(2, VBO));
 
     CHECK_GL_ERROR(glBindVertexArray(VAO));
 
-    CHECK_GL_ERROR(glBindBuffer(GL_ARRAY_BUFFER, VBO));
+    CHECK_GL_ERROR(glBindBuffer(GL_ARRAY_BUFFER, VBO[0]));
     CHECK_GL_ERROR(glBufferData(GL_ARRAY_BUFFER, vertexData.size() * sizeof(float), vertexData.data(), GL_STATIC_DRAW));
     CHECK_GL_ERROR(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0));
     CHECK_GL_ERROR(glEnableVertexAttribArray(0));
+
+    CHECK_GL_ERROR(glBindBuffer(GL_ARRAY_BUFFER, VBO[1]));
+    CHECK_GL_ERROR(glBufferData(GL_ARRAY_BUFFER, colorData.size() * sizeof(float), colorData.data(), GL_STATIC_DRAW));
+    CHECK_GL_ERROR(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0));
+    CHECK_GL_ERROR(glEnableVertexAttribArray(1));
+
 
     CHECK_GL_ERROR(glBindBuffer(GL_ARRAY_BUFFER, 0));
     CHECK_GL_ERROR(glBindVertexArray(0));
@@ -147,7 +168,7 @@ int main(int argc, char **argv)
     }
 
     CHECK_GL_ERROR(glDeleteVertexArrays(1, &VAO));
-    CHECK_GL_ERROR(glDeleteBuffers(1, &VBO));
+    CHECK_GL_ERROR(glDeleteBuffers(2, VBO));
     CHECK_GL_ERROR(glDeleteProgram(shaderProgram));
     glfwTerminate();
     return 0;
