@@ -148,12 +148,6 @@ int main(int argc, char **argv)
         GLint lightPosLoc = glGetUniformLocation(shaderProgram, "lightPos");
         GLint viewPosLoc = glGetUniformLocation(shaderProgram, "cameraPos");
 
-        // if (modelLoc == -1 || viewLoc == -1 || projLoc == -1 || lightPosLoc == -1 || viewPosLoc == -1) 
-        // {
-        //     std::cerr << "Error[1]: Failed to get uniform locations" << std::endl;
-        //     return -1;
-        // }
-
         CHECK_GL_ERROR(glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)));
         CHECK_GL_ERROR(glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view)));
         CHECK_GL_ERROR(glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection)));
@@ -167,12 +161,6 @@ int main(int argc, char **argv)
         GLint matNiLoc = glGetUniformLocation(shaderProgram, "material.Ni");
         GLint matDLoc = glGetUniformLocation(shaderProgram, "material.d");
         GLint matIllumLoc = glGetUniformLocation(shaderProgram, "material.illum");
-
-        if(matKdLoc == -1 || matKsLoc == -1 || matKaLoc == -1 || matNsLoc == -1 || matNiLoc == -1 || matDLoc == -1 || matIllumLoc == -1)
-        {
-            std::cerr << "Error[2]: Failed to get uniform locations" << std::endl;
-            return -1;
-        }
 
         CHECK_GL_ERROR(glUniform3fv(matKdLoc, 1, glm::value_ptr(materials.Kd)));
         CHECK_GL_ERROR(glUniform3fv(matKsLoc, 1, glm::value_ptr(materials.Ks)));
