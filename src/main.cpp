@@ -123,17 +123,20 @@ int main(int argc, char **argv)
     CHECK_GL_ERROR(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0));
     CHECK_GL_ERROR(glEnableVertexAttribArray(1));
 
-
     CHECK_GL_ERROR(glBindBuffer(GL_ARRAY_BUFFER, 0));
     CHECK_GL_ERROR(glBindVertexArray(0));
 
-    glm::mat4 projection = glm::perspective(glm::radians(45.0f), 1080.0f / 720.0f, 0.1f, 100.0f);
-    glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -10.0f));
-    glm::mat4 model = glm::mat4(1.0f);
+    glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
+    glm::vec3 cameraPos(0.0f, 0.0f, -10.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
+    glm::mat4 view = glm::translate(glm::mat4(1.0f), cameraPos);
+    glm::mat4 model = glm::mat4(1.0f); 
 
     while(!glfwWindowShouldClose(window))
     {
-        CHECK_GL_ERROR(glClear(GL_COLOR_BUFFER_BIT));
+        CHECK_GL_ERROR(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+
+        CHECK_GL_ERROR(glEnable(GL_DEPTH_TEST));
 
         CHECK_GL_ERROR(glUseProgram(shaderProgram));
 
@@ -142,23 +145,42 @@ int main(int argc, char **argv)
         GLint modelLoc = glGetUniformLocation(shaderProgram, "model");
         GLint viewLoc = glGetUniformLocation(shaderProgram, "view");
         GLint projLoc = glGetUniformLocation(shaderProgram, "projection");
+        GLint lightPosLoc = glGetUniformLocation(shaderProgram, "lightPos");
+        GLint viewPosLoc = glGetUniformLocation(shaderProgram, "cameraPos");
 
-        if (modelLoc == -1 || viewLoc == -1 || projLoc == -1) 
-        {
-            std::cerr << "Error: Failed to get uniform locations" << std::endl;
-            return -1;
-        }
+        // if (modelLoc == -1 || viewLoc == -1 || projLoc == -1 || lightPosLoc == -1 || viewPosLoc == -1) 
+        // {
+        //     std::cerr << "Error[1]: Failed to get uniform locations" << std::endl;
+        //     return -1;
+        // }
 
         CHECK_GL_ERROR(glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)));
         CHECK_GL_ERROR(glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view)));
         CHECK_GL_ERROR(glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection)));
-        CHECK_GL_ERROR(glUniform1f(glGetUniformLocation(shaderProgram, "material.Ns"), materials.Ns));
-        CHECK_GL_ERROR(glUniform1f(glGetUniformLocation(shaderProgram, "material.Ni"), materials.Ni));
-        CHECK_GL_ERROR(glUniform1f(glGetUniformLocation(shaderProgram, "material.d"), materials.d));
-        CHECK_GL_ERROR(glUniform3fv(glGetUniformLocation(shaderProgram, "material.Ka"), 1, glm::value_ptr(materials.Ka)));
-        CHECK_GL_ERROR(glUniform3fv(glGetUniformLocation(shaderProgram, "material.Kd"), 1, glm::value_ptr(materials.Kd)));
-        CHECK_GL_ERROR(glUniform3fv(glGetUniformLocation(shaderProgram, "material.Ks"), 1, glm::value_ptr(materials.Ks)));
-        CHECK_GL_ERROR(glUniform1i(glGetUniformLocation(shaderProgram, "material.illum"), materials.illum));
+        CHECK_GL_ERROR(glUniform3fv(lightPosLoc, 1, glm::value_ptr(lightPos)));
+        CHECK_GL_ERROR(glUniform3fv(viewPosLoc, 1, glm::value_ptr(cameraPos)));
+
+        GLint matKdLoc = glGetUniformLocation(shaderProgram, "material.Kd");
+        GLint matKsLoc = glGetUniformLocation(shaderProgram, "material.Ks");
+        GLint matKaLoc = glGetUniformLocation(shaderProgram, "material.Ka");
+        GLint matNsLoc = glGetUniformLocation(shaderProgram, "material.Ns");
+        GLint matNiLoc = glGetUniformLocation(shaderProgram, "material.Ni");
+        GLint matDLoc = glGetUniformLocation(shaderProgram, "material.d");
+        GLint matIllumLoc = glGetUniformLocation(shaderProgram, "material.illum");
+
+        if(matKdLoc == -1 || matKsLoc == -1 || matKaLoc == -1 || matNsLoc == -1 || matNiLoc == -1 || matDLoc == -1 || matIllumLoc == -1)
+        {
+            std::cerr << "Error[2]: Failed to get uniform locations" << std::endl;
+            return -1;
+        }
+
+        CHECK_GL_ERROR(glUniform3fv(matKdLoc, 1, glm::value_ptr(materials.Kd)));
+        CHECK_GL_ERROR(glUniform3fv(matKsLoc, 1, glm::value_ptr(materials.Ks)));
+        CHECK_GL_ERROR(glUniform3fv(matKaLoc, 1, glm::value_ptr(materials.Ka)));
+        CHECK_GL_ERROR(glUniform1f(matNsLoc, materials.Ns));
+        CHECK_GL_ERROR(glUniform1f(matNiLoc, materials.Ni));
+        CHECK_GL_ERROR(glUniform1f(matDLoc, materials.d));
+        CHECK_GL_ERROR(glUniform1i(matIllumLoc, materials.illum));
 
         CHECK_GL_ERROR(glBindVertexArray(VAO));
         CHECK_GL_ERROR(glDrawArrays(GL_TRIANGLES, 0, vertexData.size() / 3));
