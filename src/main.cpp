@@ -104,7 +104,7 @@ int main(int argc, char **argv)
             colorData.push_back(b);
         }
     }
-    
+
     GLuint shaderProgram = createShaderProgram("res/shaders/vertexShader.glsl", "res/shaders/fragmentShader.glsl");
 
     GLuint VBO[2], VAO;
@@ -126,11 +126,15 @@ int main(int argc, char **argv)
     CHECK_GL_ERROR(glBindBuffer(GL_ARRAY_BUFFER, 0));
     CHECK_GL_ERROR(glBindVertexArray(0));
 
-    glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
-    glm::vec3 cameraPos(0.0f, 0.0f, -10.0f);
+    glm::vec3 lightPos(1.2f, 1.0f, 10.0f);
+    glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
+    float lightIntensity = 1.0f;
+    glm::vec3 cameraPos(0.0f, 0.0f, 10.0f);
+    glm::vec3 cameraTarget(0.0f, 0.0f, 0.0f);
+    glm::vec3 upVector(0.0f, 1.0f, 0.0f);
     glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
-    glm::mat4 view = glm::translate(glm::mat4(1.0f), cameraPos);
-    glm::mat4 model = glm::mat4(1.0f); 
+    glm::mat4 view = glm::lookAt(cameraPos, cameraTarget, upVector);
+    glm::mat4 model = glm::mat4(1.0f);
 
     while(!glfwWindowShouldClose(window))
     {
@@ -146,12 +150,16 @@ int main(int argc, char **argv)
         GLint viewLoc = glGetUniformLocation(shaderProgram, "view");
         GLint projLoc = glGetUniformLocation(shaderProgram, "projection");
         GLint lightPosLoc = glGetUniformLocation(shaderProgram, "lightPos");
+        GLint lightColorLoc = glGetUniformLocation(shaderProgram, "lightColor");
+        GLint lightIntensityLoc = glGetUniformLocation(shaderProgram, "lightIntensity");
         GLint viewPosLoc = glGetUniformLocation(shaderProgram, "cameraPos");
 
         CHECK_GL_ERROR(glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)));
         CHECK_GL_ERROR(glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view)));
         CHECK_GL_ERROR(glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection)));
         CHECK_GL_ERROR(glUniform3fv(lightPosLoc, 1, glm::value_ptr(lightPos)));
+        CHECK_GL_ERROR(glUniform3fv(lightColorLoc, 1, glm::value_ptr(lightColor)));
+        CHECK_GL_ERROR(glUniform1f(lightIntensityLoc, lightIntensity));
         CHECK_GL_ERROR(glUniform3fv(viewPosLoc, 1, glm::value_ptr(cameraPos)));
 
         GLint matKdLoc = glGetUniformLocation(shaderProgram, "material.Kd");

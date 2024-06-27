@@ -2,6 +2,8 @@
 
 in vec3 ourColor;
 in vec3 FragPos;
+in vec3 Normal;
+in vec3 NormalColor;
 
 struct Material
 {
@@ -17,7 +19,10 @@ struct Material
 out vec4 FragColor;
 uniform Material material;
 uniform vec3 lightPos;
+uniform vec3 lightColor;
+uniform float lightIntensity;
 uniform vec3 cameraPos;
+
 
 void main()
 {
@@ -30,21 +35,17 @@ void main()
     vec3 color;
 
     vec3 normal = normalize(vec3(0.0, 0.0, 1.0));
-    vec3 lightDir = normalize(vec3(lightPos - FragPos));
-    vec3 viewDir = normalize(vec3(cameraPos - FragPos));
-    vec3 reflectDir = reflect(lightDir, normal);
+    vec3 lightDir = normalize(lightPos - FragPos);
+    vec3 viewDir = normalize(cameraPos - FragPos);
+    vec3 reflectDir = reflect(-lightDir, normal);
     
-    float ambientStrength = 0.1;
+    float ambientStrength = 0.5;
     float diffuseStrength = max(dot(normal, lightDir), 0.0);
-    float specularStrength = pow(max(dot(viewDir, reflectDir), shininess), shininess);
+    float specularStrength = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
     
-    vec3 ambient = ambientStrength * ambientColor * ourColor;
-    vec3 diffuse = diffuseStrength * diffuseColor * ourColor;
-    vec3 specular = specularStrength * specularColor * ourColor;
-
-    vec3 refractedLightDir = refract(-lightDir, normal, 1.0 / refraction);
-    float refractionEffect = max(dot(normal, refractedLightDir), 0.0);
-    vec3 refractionColor = refractionEffect * vec3(1.0, 1.0, 1.0);
+    vec3 ambient = ambientStrength * ambientColor;
+    vec3 diffuse = diffuseStrength * diffuseColor;
+    vec3 specular = specularStrength * specularColor * lightColor * lightIntensity;
 
     if (material.illum == 0)
     {
@@ -59,5 +60,5 @@ void main()
         color = ambient + diffuse + specular;
     }
 
-    FragColor = vec4(color, transparency);
+    FragColor = vec4(color * ourColor, transparency);
 }
