@@ -19,6 +19,8 @@
 #include "../inc/objloader.h"
 #include "../inc/checkGLError.h"
 #include "../inc/Shader.h"
+#include "../inc/computeNormals.h"
+
 
 const GLuint WIDTH = 1080, HEIGHT = 720;
 
@@ -105,11 +107,13 @@ int main(int argc, char **argv)
         }
     }
 
+    std::vector<glm::vec3> normals = computeNormals(vertices, faces);
+
     GLuint shaderProgram = createShaderProgram("res/shaders/vertexShader.glsl", "res/shaders/fragmentShader.glsl");
 
-    GLuint VBO[2], VAO;
+    GLuint VBO[3], VAO;
     CHECK_GL_ERROR(glGenVertexArrays(1, &VAO));
-    CHECK_GL_ERROR(glGenBuffers(2, VBO));
+    CHECK_GL_ERROR(glGenBuffers(3, VBO));
 
     CHECK_GL_ERROR(glBindVertexArray(VAO));
 
@@ -123,12 +127,17 @@ int main(int argc, char **argv)
     CHECK_GL_ERROR(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0));
     CHECK_GL_ERROR(glEnableVertexAttribArray(1));
 
+    CHECK_GL_ERROR(glBindBuffer(GL_ARRAY_BUFFER, VBO[2]));
+    CHECK_GL_ERROR(glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), normals.data(), GL_STATIC_DRAW));
+    CHECK_GL_ERROR(glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0));
+    CHECK_GL_ERROR(glEnableVertexAttribArray(2));
+
     CHECK_GL_ERROR(glBindBuffer(GL_ARRAY_BUFFER, 0));
     CHECK_GL_ERROR(glBindVertexArray(0));
 
     glm::vec3 lightPos(1.2f, 1.0f, 10.0f);
     glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
-    float lightIntensity = 1.0f;
+    float lightIntensity = 50.0f;
     glm::vec3 cameraPos(0.0f, 0.0f, 10.0f);
     glm::vec3 cameraTarget(0.0f, 0.0f, 0.0f);
     glm::vec3 upVector(0.0f, 1.0f, 0.0f);
@@ -141,6 +150,7 @@ int main(int argc, char **argv)
         CHECK_GL_ERROR(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 
         CHECK_GL_ERROR(glEnable(GL_DEPTH_TEST));
+        CHECK_GL_ERROR(glDepthFunc(GL_LESS));
 
         CHECK_GL_ERROR(glUseProgram(shaderProgram));
 
@@ -186,7 +196,7 @@ int main(int argc, char **argv)
     }
 
     CHECK_GL_ERROR(glDeleteVertexArrays(1, &VAO));
-    CHECK_GL_ERROR(glDeleteBuffers(2, VBO));
+    CHECK_GL_ERROR(glDeleteBuffers(3, VBO));
     CHECK_GL_ERROR(glDeleteProgram(shaderProgram));
     glfwTerminate();
     return 0;

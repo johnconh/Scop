@@ -45,7 +45,7 @@ void main()
     
     vec3 ambient = ambientStrength * ambientColor;
     vec3 diffuse = diffuseStrength * diffuseColor;
-    vec3 specular = specularStrength * specularColor * lightColor * lightIntensity;
+    vec3 specular = specularStrength * specularColor;
 
     if (material.illum == 0)
     {
