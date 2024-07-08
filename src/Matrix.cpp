@@ -113,3 +113,21 @@ Matrix4 rotate(Matrix4 m, float angle, Vector3 axis) //Esta funcion rota una mat
     }
     return result;
 }
+
+Matrix4 translateMatrix(float x, float y, float z)
+{
+    Matrix4 m = identity();
+    m.m[3][0] = x;
+    m.m[3][1] = y;
+    m.m[3][2] = z;
+    return m;
+}
+
+Matrix4 operator*(const Matrix4& a, const Matrix4& b) {
+    Matrix4 result;
+    for(int i = 0; i < 4; i++)
+        for(int j = 0; j < 4; j++)
+            result.m[i][j] = a.m[i][0] * b.m[0][j] + a.m[i][1] * b.m[1][j] + a.m[i][2] * b.m[2][j] + a.m[i][3] * b.m[3][j];
+    return result;
+}
+
