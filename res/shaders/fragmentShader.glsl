@@ -3,7 +3,6 @@
 in vec3 ourColor;
 in vec3 FragPos;
 in vec3 Normal;
-in vec3 NormalColor;
 
 struct Material
 {
@@ -19,10 +18,7 @@ struct Material
 out vec4 FragColor;
 uniform Material material;
 uniform vec3 lightPos;
-uniform vec3 lightColor;
-uniform float lightIntensity;
 uniform vec3 cameraPos;
-
 
 void main()
 {
@@ -34,12 +30,12 @@ void main()
     float refraction = material.Ni;
     vec3 color;
 
-    vec3 normal = normalize(vec3(0.0, 0.0, 1.0));
+    vec3 normal = normalize(Normal);
     vec3 lightDir = normalize(lightPos - FragPos);
     vec3 viewDir = normalize(cameraPos - FragPos);
     vec3 reflectDir = reflect(-lightDir, normal);
     
-    float ambientStrength = 0.5;
+    float ambientStrength = 1.0;
     float diffuseStrength = max(dot(normal, lightDir), 0.0);
     float specularStrength = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
     

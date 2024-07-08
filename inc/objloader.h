@@ -15,8 +15,7 @@
 
 #include <vector>
 #include <string>
-#include <unordered_map>
-#include <glm/glm.hpp>
+#include "../inc/Matrix.h"
 
 struct Vertex
 {
@@ -32,13 +31,13 @@ struct Face
 struct Material
 {
     std::string name = "";
-    float Ns;
-    float Ni;
-    float d;
-    glm::vec3 Ka;
-    glm::vec3 Kd;
-    glm::vec3 Ks;
-    int illum;
+    float Ns = 96.078431f;
+    float Ni = 1.0f;
+    float d  = 1.0f;
+    Vector3 Ka = {1.0f, 1.0f, 1.0f};
+    Vector3 Kd = {1.0f, 1.0f, 1.0f};
+    Vector3 Ks = {1.0f, 1.0f, 1.0f};
+    int illum = 2;
 };
 
 void loadOBJ(const char * path, std::vector<Vertex> & out_vertices, std::vector<Face> & out_uvs, Material & out_materials);

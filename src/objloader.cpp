@@ -16,7 +16,6 @@
 #include <sstream>
 #include <iomanip>
 #include <filesystem>
-#include <iomanip>
 
 void loadMTL(const char * path, Material & out_materials)
 {
@@ -64,20 +63,20 @@ void loadMTL(const char * path, Material & out_materials)
         {
             float r, g, b;
             iss >> r >> g >> b;
-            out_materials.Ka = glm::vec3(r, g, b);
+            out_materials.Ka = Vector3({r, g, b});
         }
         else if (type == "Kd")
         {
             float r, g, b;
             iss >> r >> g >> b;
-            out_materials.Kd = glm::vec3(r, g, b);
+            out_materials.Kd = Vector3({r, g, b});
 
         }
         else if (type == "Ks")
         {   
             float r, g, b;
             iss >> r >> g >> b;
-            out_materials.Ks = glm::vec3(r, g, b);
+            out_materials.Ks = Vector3({r, g, b});
         }
         else if (type == "illum")
         {
@@ -87,15 +86,15 @@ void loadMTL(const char * path, Material & out_materials)
         }
     }
 
-    std::cout << std::fixed << std::setprecision(6);
-    std::cout << "Material name: " << out_materials.name << std::endl;
-    std::cout << "Ns: " << out_materials.Ns << std::endl;
-    std::cout << "Ni: " << out_materials.Ni << std::endl;
-    std::cout << "d: " << out_materials.d << std::endl;
-    std::cout << "Ka: " << out_materials.Ka[0] << ", " << out_materials.Ka[1] << ", " << out_materials.Ka[2] << std::endl;
-    std::cout << "Kd: " << out_materials.Kd[0] << ", " << out_materials.Kd[1] << ", " << out_materials.Kd[2] << std::endl;
-    std::cout << "Ks: " << out_materials.Ks[0] << ", " << out_materials.Ks[1] << ", " << out_materials.Ks[2] << std::endl;
-    std::cout << "illum: " << out_materials.illum << std::endl;
+//     std::cout << std::fixed << std::setprecision(6);
+//     std::cout << "Material name: " << out_materials.name << std::endl;
+//     std::cout << "Ns: " << out_materials.Ns << std::endl;
+//     std::cout << "Ni: " << out_materials.Ni << std::endl;
+//     std::cout << "d: " << out_materials.d << std::endl;
+//     std::cout << "Ka: " << out_materials.Ka.x << ", " << out_materials.Ka.y << ", " << out_materials.Ka.z << std::endl;
+//     std::cout << "Kd: " << out_materials.Kd.x << ", " << out_materials.Kd.y << ", " << out_materials.Kd.z << std::endl;
+//     std::cout << "Ks: " << out_materials.Ks.x << ", " << out_materials.Ks.y << ", " << out_materials.Ks.z << std::endl;
+//     std::cout << "illum: " << out_materials.illum << std::endl;
 }
 
 void loadOBJ(const char * path, std::vector<Vertex> & out_vertices, std::vector<Face> & out_faces, Material & out_materials)

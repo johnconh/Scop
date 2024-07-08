@@ -13,13 +13,11 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
-#include "../inc/glm/glm.hpp"
-#include "../inc/glm/gtc/matrix_transform.hpp"
-#include "../inc/glm/gtc/type_ptr.hpp"
 #include "../inc/objloader.h"
 #include "../inc/checkGLError.h"
 #include "../inc/Shader.h"
 #include "../inc/computeNormals.h"
+#include "../inc/Matrix.h"
 
 
 const GLuint WIDTH = 1080, HEIGHT = 720;
@@ -73,8 +71,13 @@ int main(int argc, char **argv)
     std::vector<Face> faces;
     Material materials;
     loadOBJ(objFile.c_str(), vertices, faces, materials);
+
+    std::vector<Vertex> normalizedVertex;
+    computeNormals(vertices, normalizedVertex);
+
     std::vector<float> vertexData;
     std::vector<float> colorData;
+    std::vector<float> normals;
     for(size_t faceIndex = 0; faceIndex < faces.size(); faceIndex++)
     {
         const Face &face = faces[faceIndex];
@@ -87,6 +90,9 @@ int main(int argc, char **argv)
             vertexData.push_back(vertices[face.v[0] - 1].x);
             vertexData.push_back(vertices[face.v[0] - 1].y);
             vertexData.push_back(vertices[face.v[0] - 1].z);
+            normals.push_back(normalizedVertex[face.v[0] - 1].x);
+            normals.push_back(normalizedVertex[face.v[0] - 1].y);
+            normals.push_back(normalizedVertex[face.v[0] - 1].z);
             colorData.push_back(r);
             colorData.push_back(g);
             colorData.push_back(b);
@@ -94,6 +100,9 @@ int main(int argc, char **argv)
             vertexData.push_back(vertices[face.v[i + 1] - 1].x);
             vertexData.push_back(vertices[face.v[i + 1] - 1].y);
             vertexData.push_back(vertices[face.v[i + 1] - 1].z);
+            normals.push_back(normalizedVertex[face.v[i + 1] - 1].x);
+            normals.push_back(normalizedVertex[face.v[i + 1] - 1].y);
+            normals.push_back(normalizedVertex[face.v[i + 1] - 1].z);
             colorData.push_back(r);
             colorData.push_back(g);
             colorData.push_back(b);
@@ -101,13 +110,14 @@ int main(int argc, char **argv)
             vertexData.push_back(vertices[face.v[i + 2] - 1].x);
             vertexData.push_back(vertices[face.v[i + 2] - 1].y);
             vertexData.push_back(vertices[face.v[i + 2] - 1].z);
+            normals.push_back(normalizedVertex[face.v[i + 2] - 1].x);
+            normals.push_back(normalizedVertex[face.v[i + 2] - 1].y);
+            normals.push_back(normalizedVertex[face.v[i + 2] - 1].z);
             colorData.push_back(r);
             colorData.push_back(g);
             colorData.push_back(b);
         }
     }
-
-    std::vector<glm::vec3> normals = computeNormals(vertices, faces);
 
     GLuint shaderProgram = createShaderProgram("res/shaders/vertexShader.glsl", "res/shaders/fragmentShader.glsl");
 
@@ -128,23 +138,21 @@ int main(int argc, char **argv)
     CHECK_GL_ERROR(glEnableVertexAttribArray(1));
 
     CHECK_GL_ERROR(glBindBuffer(GL_ARRAY_BUFFER, VBO[2]));
-    CHECK_GL_ERROR(glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), normals.data(), GL_STATIC_DRAW));
+    CHECK_GL_ERROR(glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(float), normals.data(), GL_STATIC_DRAW));
     CHECK_GL_ERROR(glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0));
     CHECK_GL_ERROR(glEnableVertexAttribArray(2));
 
     CHECK_GL_ERROR(glBindBuffer(GL_ARRAY_BUFFER, 0));
     CHECK_GL_ERROR(glBindVertexArray(0));
 
-    glm::vec3 lightPos(1.2f, 1.0f, 10.0f);
-    glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
-    float lightIntensity = 50.0f;
-    glm::vec3 cameraPos(0.0f, 0.0f, 10.0f);
-    glm::vec3 cameraTarget(0.0f, 0.0f, 0.0f);
-    glm::vec3 upVector(0.0f, 1.0f, 0.0f);
-    glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
-    glm::mat4 view = glm::lookAt(cameraPos, cameraTarget, upVector);
-    glm::mat4 model = glm::mat4(1.0f);
+    Vector3 lightPos({1.2f, 1.0f, 10.0f});
+    Vector3 cameraPos({0.0f, 0.0f, 10.0f});
+    Matrix4 projection = perspective(45.0f, (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
+    Matrix4 view = lookAt(cameraPos, {0.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f});
+    Matrix4 model = identity();
 
+    float rotationSpeed = 0.5f;
+    double lastFrameTime = glfwGetTime();
     while(!glfwWindowShouldClose(window))
     {
         CHECK_GL_ERROR(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
@@ -154,23 +162,24 @@ int main(int argc, char **argv)
 
         CHECK_GL_ERROR(glUseProgram(shaderProgram));
 
-        model = glm::rotate(model, glm::radians(0.5f), glm::vec3(0.0f, 1.0f, 0.0f));
+        double currenTime = glfwGetTime();
+        double deltaTime = currenTime - lastFrameTime;
+        lastFrameTime = currenTime;
+
+        float deltaAngle = rotationSpeed * deltaTime;
+        model = rotate(model, deltaAngle, {0.0f, 1.0f, 0.0f});
 
         GLint modelLoc = glGetUniformLocation(shaderProgram, "model");
         GLint viewLoc = glGetUniformLocation(shaderProgram, "view");
         GLint projLoc = glGetUniformLocation(shaderProgram, "projection");
         GLint lightPosLoc = glGetUniformLocation(shaderProgram, "lightPos");
-        GLint lightColorLoc = glGetUniformLocation(shaderProgram, "lightColor");
-        GLint lightIntensityLoc = glGetUniformLocation(shaderProgram, "lightIntensity");
         GLint viewPosLoc = glGetUniformLocation(shaderProgram, "cameraPos");
 
-        CHECK_GL_ERROR(glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)));
-        CHECK_GL_ERROR(glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view)));
-        CHECK_GL_ERROR(glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection)));
-        CHECK_GL_ERROR(glUniform3fv(lightPosLoc, 1, glm::value_ptr(lightPos)));
-        CHECK_GL_ERROR(glUniform3fv(lightColorLoc, 1, glm::value_ptr(lightColor)));
-        CHECK_GL_ERROR(glUniform1f(lightIntensityLoc, lightIntensity));
-        CHECK_GL_ERROR(glUniform3fv(viewPosLoc, 1, glm::value_ptr(cameraPos)));
+        CHECK_GL_ERROR(glUniformMatrix4fv(modelLoc, 1, GL_FALSE, &model.m[0][0]));
+        CHECK_GL_ERROR(glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view.m[0][0]));
+        CHECK_GL_ERROR(glUniformMatrix4fv(projLoc, 1, GL_FALSE, &projection.m[0][0]));
+        CHECK_GL_ERROR(glUniform3fv(lightPosLoc, 1, &lightPos.x));
+        CHECK_GL_ERROR(glUniform3fv(viewPosLoc, 1, &cameraPos.x));
 
         GLint matKdLoc = glGetUniformLocation(shaderProgram, "material.Kd");
         GLint matKsLoc = glGetUniformLocation(shaderProgram, "material.Ks");
@@ -180,9 +189,9 @@ int main(int argc, char **argv)
         GLint matDLoc = glGetUniformLocation(shaderProgram, "material.d");
         GLint matIllumLoc = glGetUniformLocation(shaderProgram, "material.illum");
 
-        CHECK_GL_ERROR(glUniform3fv(matKdLoc, 1, glm::value_ptr(materials.Kd)));
-        CHECK_GL_ERROR(glUniform3fv(matKsLoc, 1, glm::value_ptr(materials.Ks)));
-        CHECK_GL_ERROR(glUniform3fv(matKaLoc, 1, glm::value_ptr(materials.Ka)));
+        CHECK_GL_ERROR(glUniform3fv(matKdLoc, 1, &materials.Kd.x));
+        CHECK_GL_ERROR(glUniform3fv(matKsLoc, 1, &materials.Ks.x));
+        CHECK_GL_ERROR(glUniform3fv(matKaLoc, 1, &materials.Ka.x));
         CHECK_GL_ERROR(glUniform1f(matNsLoc, materials.Ns));
         CHECK_GL_ERROR(glUniform1f(matNiLoc, materials.Ni));
         CHECK_GL_ERROR(glUniform1f(matDLoc, materials.d));

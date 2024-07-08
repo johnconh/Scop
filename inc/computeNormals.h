@@ -14,9 +14,8 @@
 #define COMPUTENORMALS_H
 
 #include <vector>
-#include <glm/glm.hpp>
 #include <objloader.h>
 
-std::vector<glm::vec3> computeNormals(const std::vector<Vertex>& vertices, const std::vector<Face>& faces);
+void computeNormals(const std::vector<Vertex>& inputVertices, std::vector<Vertex>& outputVertices);
 
 #endif
