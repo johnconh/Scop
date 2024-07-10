@@ -1,26 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Shader.h                                           :+:      :+:    :+:   */
+/*   Input.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jdasilva <jdasilva@student.42.fr>          #+#  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024-07-10 15:10:09 by jdasilva          #+#    #+#             */
-/*   Updated: 2024-07-10 15:10:09 by jdasilva         ###   ########.fr       */
+/*   Created: 2024-07-10 14:28:28 by jdasilva          #+#    #+#             */
+/*   Updated: 2024-07-10 14:28:28 by jdasilva         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SHADER_UTIL_H
-#define SHADER_UTIL_H
+#ifndef INPUT_H
+#define INPUT_H
 
-#include <GL/glew.h>
-#include <string>
-#include <fstream>
-#include <sstream>
-#include <iostream>
-#include <vector>
+#include <GLFW/glfw3.h>
+#include "Matrix.h"
 
-std::string readShaderFile(const char* filePath);
-GLuint createShaderProgram(const char* vertexFilePath, const char* fragmentFilePath);
+void handleInput(GLFWwindow *window, Matrix4& model, Vector3& objectmovement, float movementSpeed, float deltaTime);
 
 #endif

@@ -18,7 +18,7 @@
 #include "../inc/Shader.h"
 #include "../inc/computeNormals.h"
 #include "../inc/Matrix.h"
-
+#include "../inc/Input.h"
 
 const GLuint WIDTH = 1080, HEIGHT = 720;
 
@@ -74,6 +74,8 @@ int main(int argc, char **argv)
 
     std::vector<Vertex> normalizedVertex;
     computeNormals(vertices, normalizedVertex);
+
+    Vector3 OBJcenter = calculateObjectCenter(vertices);
 
     std::vector<float> vertexData;
     std::vector<float> colorData;
@@ -170,53 +172,12 @@ int main(int argc, char **argv)
         double deltaTime = currenTime - lastFrameTime;
         lastFrameTime = currenTime;
 
-        Matrix4 tranlstionToOrigin = translateMatrix(-objectMovement.x, -objectMovement.y, -objectMovement.z);
-        Matrix4 translationBack = translateMatrix(objectMovement.x, objectMovement.y, objectMovement.z);
-
-        model = operator*(model, tranlstionToOrigin);
-
         float deltaAngle = rotationSpeed * deltaTime;
-        model = rotate(model, deltaAngle, {0.0f, 1.0f, 0.0f});
+        //model = rotate(model, deltaAngle, {0.0f, 1.0f, 0.0f});
+        model = rotateAroundCenter(deltaAngle, {0.0f, 1.0f, 0.0f}, OBJcenter);
 
-        model = operator*(model, translationBack);
-        if(glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
-        {
-            objectMovement.z -= movementSpeed * deltaTime;
-            Matrix4 translation = translateMatrix(0.0f, 0.0f, objectMovement.z);
-            model = operator*(model, translation);
-        }
-        if(glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
-        {
-            objectMovement.z += movementSpeed * deltaTime;
-            Matrix4 translation = translateMatrix(0.0f, 0.0f, objectMovement.z);
-            model = operator*(model, translation);
-        }
-        if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        {
-            objectMovement.x -= movementSpeed * deltaTime;
-            Matrix4 translation = translateMatrix(objectMovement.x, 0.0f, 0.0f);
-            model = operator*(model, translation);
-        }
-        if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        {
-            objectMovement.x += movementSpeed * deltaTime;
-            Matrix4 translation = translateMatrix(objectMovement.x, 0.0f, 0.0f);
-            model = operator*(model, translation);
-        }
-        if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        {
-            objectMovement.y += movementSpeed * deltaTime;
-            Matrix4 translation = translateMatrix(0.0f, objectMovement.y, 0.0f);
-            model = operator*(model, translation);
-        }
-        if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        {
-            objectMovement.y -= movementSpeed * deltaTime;
-            Matrix4 translation = translateMatrix(0.0f, objectMovement.y, 0.0f);
-            model = operator*(model, translation);
-        }
+        handleInput(window, model, objectMovement, movementSpeed, deltaTime);
         
-
         GLint modelLoc = glGetUniformLocation(shaderProgram, "model");
         GLint viewLoc = glGetUniformLocation(shaderProgram, "view");
         GLint projLoc = glGetUniformLocation(shaderProgram, "projection");

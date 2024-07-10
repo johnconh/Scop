@@ -1,26 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Shader.h                                           :+:      :+:    :+:   */
+/*   Vector3.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jdasilva <jdasilva@student.42.fr>          #+#  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024-07-10 15:10:09 by jdasilva          #+#    #+#             */
-/*   Updated: 2024-07-10 15:10:09 by jdasilva         ###   ########.fr       */
+/*   Created: 2024-07-10 15:45:53 by jdasilva          #+#    #+#             */
+/*   Updated: 2024-07-10 15:45:53 by jdasilva         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SHADER_UTIL_H
-#define SHADER_UTIL_H
+#ifndef VECTOR3_H
+#define VECTOR3_H
 
-#include <GL/glew.h>
-#include <string>
-#include <fstream>
-#include <sstream>
-#include <iostream>
-#include <vector>
-
-std::string readShaderFile(const char* filePath);
-GLuint createShaderProgram(const char* vertexFilePath, const char* fragmentFilePath);
+struct Vector3
+{
+    float x, y, z;
+};
 
 #endif

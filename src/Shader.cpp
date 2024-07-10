@@ -12,10 +12,7 @@
 
 
 #include "../inc/Shader.h"
-#include <fstream>
-#include <sstream>
-#include <iostream>
-#include <vector>
+
 
 std::string readShaderFile(const char* filePath)
 {

@@ -11,8 +11,6 @@
 /* ************************************************************************** */
 
 #include "../inc/computeNormals.h"
-#include <iostream>
-#include <cmath>
 
 void computeNormals(const std::vector<Vertex>& inputVertices,  std::vector<Vertex>& outputVertices)
 {

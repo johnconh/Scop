@@ -11,11 +11,6 @@
 /* ************************************************************************** */
 
 #include "../inc/objloader.h"
-#include <fstream>
-#include <iostream>
-#include <sstream>
-#include <iomanip>
-#include <filesystem>
 
 void loadMTL(const char * path, Material & out_materials)
 {

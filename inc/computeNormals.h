@@ -13,8 +13,11 @@
 #ifndef COMPUTENORMALS_H
 #define COMPUTENORMALS_H
 
+#include <iostream>
+#include <cmath>
 #include <vector>
-#include <objloader.h>
+#include "Vertex.h"
+#include "Vector3.h"
 
 void computeNormals(const std::vector<Vertex>& inputVertices, std::vector<Vertex>& outputVertices);
 

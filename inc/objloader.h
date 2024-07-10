@@ -15,13 +15,13 @@
 
 #include <vector>
 #include <string>
-#include "../inc/Matrix.h"
-
-struct Vertex
-{
-    float x, y, z;
-
-};
+#include <fstream>
+#include <iostream>
+#include <sstream>
+#include <iomanip>
+#include <filesystem>
+#include "Vector3.h"
+#include "Vertex.h"
 
 struct Face
 {

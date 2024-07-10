@@ -1,26 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Shader.h                                           :+:      :+:    :+:   */
+/*   Vertex.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jdasilva <jdasilva@student.42.fr>          #+#  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024-07-10 15:10:09 by jdasilva          #+#    #+#             */
-/*   Updated: 2024-07-10 15:10:09 by jdasilva         ###   ########.fr       */
+/*   Created: 2024-07-10 15:25:45 by jdasilva          #+#    #+#             */
+/*   Updated: 2024-07-10 15:25:45 by jdasilva         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SHADER_UTIL_H
-#define SHADER_UTIL_H
+#ifndef VERTEX_H
+#define VERTEX_H
 
-#include <GL/glew.h>
-#include <string>
-#include <fstream>
-#include <sstream>
-#include <iostream>
-#include <vector>
+struct Vertex
+{
+    float x, y, z;
 
-std::string readShaderFile(const char* filePath);
-GLuint createShaderProgram(const char* vertexFilePath, const char* fragmentFilePath);
+};
 
 #endif

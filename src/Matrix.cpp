@@ -1,3 +1,4 @@
+
 #include "../inc/Matrix.h"
 #include <iostream>
 #include <cmath>
@@ -114,6 +115,14 @@ Matrix4 rotate(Matrix4 m, float angle, Vector3 axis) //Esta funcion rota una mat
     return result;
 }
 
+Matrix4 rotateAroundCenter(float angle, Vector3 axis, Vector3 center) //Esta funcion rota una matriz alrededor de un punto
+{
+    Matrix4 translation = translateMatrix(-center.x, -center.y, -center.z);
+    Matrix4 rotation = rotate(identity(), angle, axis);
+    Matrix4 invTranslation = translateMatrix(center.x, center.y, center.z);
+    return operator*(operator*(invTranslation, rotation), translation);
+}
+
 Matrix4 translateMatrix(float x, float y, float z)
 {
     Matrix4 m = identity();
@@ -131,3 +140,18 @@ Matrix4 operator*(const Matrix4& a, const Matrix4& b) {
     return result;
 }
 
+Vector3 calculateObjectCenter(const std::vector<Vertex>& vertices)
+{
+    Vector3 center = {0.0f, 0.0f, 0.0f};
+
+    for(const Vertex& vertex : vertices)
+    {
+        center.x += vertex.x;
+        center.y += vertex.y;
+        center.z += vertex.z;
+    }
+    center.x /= vertices.size();
+    center.y /= vertices.size();
+    center.z /= vertices.size();
+    return center;
+}
