@@ -83,9 +83,11 @@ int main(int argc, char **argv)
     for(size_t faceIndex = 0; faceIndex < faces.size(); faceIndex++)
     {
         const Face &face = faces[faceIndex];
-        float r = static_cast <float> (faceIndex % 3 == 0);
-        float g = static_cast <float> (faceIndex % 3 == 1);
-        float b = static_cast <float> (faceIndex % 3 == 2);
+        // float r = static_cast <float> (faceIndex % 3 == 0);
+        // float g = static_cast <float> (faceIndex % 3 == 1);
+        // float b = static_cast <float> (faceIndex % 3 == 2);
+        float gray = static_cast<float>(faceIndex) / static_cast<float>(faces.size());
+
 
         for(size_t i = 0; i < face.v.size() - 2; i++)
         {
@@ -95,9 +97,12 @@ int main(int argc, char **argv)
             normals.push_back(normalizedVertex[face.v[0] - 1].x);
             normals.push_back(normalizedVertex[face.v[0] - 1].y);
             normals.push_back(normalizedVertex[face.v[0] - 1].z);
-            colorData.push_back(r);
-            colorData.push_back(g);
-            colorData.push_back(b);
+            // colorData.push_back(r);
+            // colorData.push_back(g);
+            // colorData.push_back(b);
+            colorData.push_back(gray);
+            colorData.push_back(gray);
+            colorData.push_back(gray);
 
             vertexData.push_back(vertices[face.v[i + 1] - 1].x);
             vertexData.push_back(vertices[face.v[i + 1] - 1].y);
@@ -105,9 +110,12 @@ int main(int argc, char **argv)
             normals.push_back(normalizedVertex[face.v[i + 1] - 1].x);
             normals.push_back(normalizedVertex[face.v[i + 1] - 1].y);
             normals.push_back(normalizedVertex[face.v[i + 1] - 1].z);
-            colorData.push_back(r);
-            colorData.push_back(g);
-            colorData.push_back(b);
+            // colorData.push_back(r);
+            // colorData.push_back(g);
+            // colorData.push_back(b);
+            colorData.push_back(gray);
+            colorData.push_back(gray);
+            colorData.push_back(gray);
 
             vertexData.push_back(vertices[face.v[i + 2] - 1].x);
             vertexData.push_back(vertices[face.v[i + 2] - 1].y);
@@ -115,9 +123,12 @@ int main(int argc, char **argv)
             normals.push_back(normalizedVertex[face.v[i + 2] - 1].x);
             normals.push_back(normalizedVertex[face.v[i + 2] - 1].y);
             normals.push_back(normalizedVertex[face.v[i + 2] - 1].z);
-            colorData.push_back(r);
-            colorData.push_back(g);
-            colorData.push_back(b);
+            // colorData.push_back(r);
+            // colorData.push_back(g);
+            // colorData.push_back(b);
+            colorData.push_back(gray);
+            colorData.push_back(gray);
+            colorData.push_back(gray);
         }
     }
 
@@ -153,8 +164,8 @@ int main(int argc, char **argv)
     Matrix4 view = lookAt(cameraPos, {0.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f});
     Matrix4 model = identity();
 
-    float rotationSpeed = 0.5f;
-    double lastFrameTime = glfwGetTime();
+    float rotationSpeed = 25.0f;
+    double lastFrameTime = static_cast<float>(glfwGetTime());
 
     Vector3 objectMovement = {0.0f, 0.0f, 0.0f};
     float movementSpeed = 0.05f;
@@ -168,7 +179,7 @@ int main(int argc, char **argv)
 
         CHECK_GL_ERROR(glUseProgram(shaderProgram));
 
-        double currenTime = glfwGetTime();
+        double currenTime = static_cast<float>(glfwGetTime());
         double deltaTime = currenTime - lastFrameTime;
         lastFrameTime = currenTime;
 
@@ -179,8 +190,9 @@ int main(int argc, char **argv)
         OBJcenter = {transformOBJcenter.x, transformOBJcenter.y, transformOBJcenter.z};
 
         float deltaAngle = rotationSpeed * deltaTime;
-        model = rotateAroundCenter(model, deltaAngle, {0.0f, 1.0f, 0.0f}, OBJcenter);
-
+        //model = rotate(model, degreesToRadians(deltaAngle), {0.0f, 1.0f, 0.0f});
+        model = rotateAroundCenter(model, degreesToRadians(deltaAngle), {0.0f, 1.0f, 0.0f}, OBJcenter);
+        
         GLint modelLoc = glGetUniformLocation(shaderProgram, "model");
         GLint viewLoc = glGetUniformLocation(shaderProgram, "view");
         GLint projLoc = glGetUniformLocation(shaderProgram, "projection");

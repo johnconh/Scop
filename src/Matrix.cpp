@@ -132,14 +132,6 @@ Matrix4 translateMatrix(float x, float y, float z)
     return m;
 }
 
-Matrix4 operator*(const Matrix4& a, const Matrix4& b) {
-    Matrix4 result;
-    for(int i = 0; i < 4; i++)
-        for(int j = 0; j < 4; j++)
-            result.m[i][j] = a.m[i][0] * b.m[0][j] + a.m[i][1] * b.m[1][j] + a.m[i][2] * b.m[2][j] + a.m[i][3] * b.m[3][j];
-    return result;
-}
-
 Vector3 calculateObjectCenter(const std::vector<Vertex>& vertices)
 {
     Vector3 center = {0.0f, 0.0f, 0.0f};
@@ -154,4 +146,9 @@ Vector3 calculateObjectCenter(const std::vector<Vertex>& vertices)
     center.y /= vertices.size();
     center.z /= vertices.size();
     return center;
+}
+
+float degreesToRadians(float degrees) 
+{
+    return degrees * (M_PI / 180.0f); //Convierte grados a radianes
 }

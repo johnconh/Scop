@@ -53,8 +53,8 @@ Matrix4 perspective(float fovy, float aspect, float near, float far);
 Matrix4 lookAt(Vector3 eye, Vector3 center, Vector3 up);
 Matrix4 rotate(Matrix4 m, float angle, Vector3 axis);
 Matrix4 translateMatrix(float x, float y, float z);
-//Matrix4 operator*(const Matrix4& a, const Matrix4& b);
 Matrix4 rotateAroundCenter(Matrix4 m, float angle, Vector3 axis, Vector3 center);
 Vector3 calculateObjectCenter(const std::vector<Vertex>& vertices);
+float degreesToRadians(float degrees);
 
 #endif
