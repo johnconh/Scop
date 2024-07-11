@@ -157,7 +157,7 @@ int main(int argc, char **argv)
     double lastFrameTime = glfwGetTime();
 
     Vector3 objectMovement = {0.0f, 0.0f, 0.0f};
-    float movementSpeed = 0.01f;
+    float movementSpeed = 0.05f;
 
     while(!glfwWindowShouldClose(window))
     {
@@ -172,12 +172,15 @@ int main(int argc, char **argv)
         double deltaTime = currenTime - lastFrameTime;
         lastFrameTime = currenTime;
 
-        float deltaAngle = rotationSpeed * deltaTime;
-        //model = rotate(model, deltaAngle, {0.0f, 1.0f, 0.0f});
-        model = rotateAroundCenter(deltaAngle, {0.0f, 1.0f, 0.0f}, OBJcenter);
-
         handleInput(window, model, objectMovement, movementSpeed, deltaTime);
-        
+
+        Vector4 originalOBJcenter = {OBJcenter.x, OBJcenter.y, OBJcenter.z, 1.0f};
+        Vector4 transformOBJcenter = originalOBJcenter * model;
+        OBJcenter = {transformOBJcenter.x, transformOBJcenter.y, transformOBJcenter.z};
+
+        float deltaAngle = rotationSpeed * deltaTime;
+        model = rotateAroundCenter(model, deltaAngle, {0.0f, 1.0f, 0.0f}, OBJcenter);
+
         GLint modelLoc = glGetUniformLocation(shaderProgram, "model");
         GLint viewLoc = glGetUniformLocation(shaderProgram, "view");
         GLint projLoc = glGetUniformLocation(shaderProgram, "projection");

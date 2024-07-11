@@ -115,12 +115,12 @@ Matrix4 rotate(Matrix4 m, float angle, Vector3 axis) //Esta funcion rota una mat
     return result;
 }
 
-Matrix4 rotateAroundCenter(float angle, Vector3 axis, Vector3 center) //Esta funcion rota una matriz alrededor de un punto
+Matrix4 rotateAroundCenter(Matrix4 m, float angle, Vector3 axis, Vector3 center) //Esta funcion rota una matriz alrededor de un punto
 {
-    Matrix4 translation = translateMatrix(-center.x, -center.y, -center.z);
     Matrix4 rotation = rotate(identity(), angle, axis);
+    Matrix4 translation = translateMatrix(-center.x, -center.y, -center.z);
     Matrix4 invTranslation = translateMatrix(center.x, center.y, center.z);
-    return operator*(operator*(invTranslation, rotation), translation);
+    return invTranslation * rotation * translation * m;
 }
 
 Matrix4 translateMatrix(float x, float y, float z)

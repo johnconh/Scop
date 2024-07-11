@@ -13,7 +13,6 @@
 
 #include "../inc/Shader.h"
 
-
 std::string readShaderFile(const char* filePath)
 {
     std::ifstream fileStream(filePath);
