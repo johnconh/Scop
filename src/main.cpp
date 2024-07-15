@@ -75,7 +75,6 @@ int main(int argc, char **argv)
     std::vector<Vertex> normalizedVertex;
     computeNormals(vertices, normalizedVertex);
 
-    Vector3 OBJcenter = calculateObjectCenter(vertices);
 
     std::vector<float> vertexData;
     std::vector<float> colorData;
@@ -163,8 +162,9 @@ int main(int argc, char **argv)
     Matrix4 projection = perspective(45.0f, (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
     Matrix4 view = lookAt(cameraPos, {0.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f});
     Matrix4 model = identity();
+    Vector3 OBJcenter = calculateObjectCenter(vertices);
 
-    float rotationSpeed = 25.0f;
+    float rotationSpeed = 1.0f;
     double lastFrameTime = static_cast<float>(glfwGetTime());
 
     Vector3 objectMovement = {0.0f, 0.0f, 0.0f};
@@ -185,13 +185,8 @@ int main(int argc, char **argv)
 
         handleInput(window, model, objectMovement, movementSpeed, deltaTime);
 
-        Vector4 originalOBJcenter = {OBJcenter.x, OBJcenter.y, OBJcenter.z, 1.0f};
-        Vector4 transformOBJcenter = originalOBJcenter * model;
-        OBJcenter = {transformOBJcenter.x, transformOBJcenter.y, transformOBJcenter.z};
-
         float deltaAngle = rotationSpeed * deltaTime;
-        //model = rotate(model, degreesToRadians(deltaAngle), {0.0f, 1.0f, 0.0f});
-        model = rotateAroundCenter(model, degreesToRadians(deltaAngle), {0.0f, 1.0f, 0.0f}, OBJcenter);
+        model = rotateAroundCenter(model, deltaAngle, {0.0f, 1.0f, 0.0f}, OBJcenter);
         
         GLint modelLoc = glGetUniformLocation(shaderProgram, "model");
         GLint viewLoc = glGetUniformLocation(shaderProgram, "view");

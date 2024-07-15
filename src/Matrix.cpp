@@ -30,6 +30,7 @@ float dot(Vector3 v1, Vector3 v2) //Esta funcion realiza el producto punto de do
     return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
 }
 
+
 Matrix4 identity() //Esta funcion crea una matriz identidad
 {
     Matrix4 m;
@@ -117,10 +118,10 @@ Matrix4 rotate(Matrix4 m, float angle, Vector3 axis) //Esta funcion rota una mat
 
 Matrix4 rotateAroundCenter(Matrix4 m, float angle, Vector3 axis, Vector3 center) //Esta funcion rota una matriz alrededor de un punto
 {
-    Matrix4 rotation = rotate(identity(), angle, axis);
     Matrix4 translation = translateMatrix(-center.x, -center.y, -center.z);
+    Matrix4 rotation = rotate(identity(), angle, axis);
     Matrix4 invTranslation = translateMatrix(center.x, center.y, center.z);
-    return invTranslation * rotation * translation * m;
+    return translation * rotation *  invTranslation * m;
 }
 
 Matrix4 translateMatrix(float x, float y, float z)
@@ -135,20 +136,12 @@ Matrix4 translateMatrix(float x, float y, float z)
 Vector3 calculateObjectCenter(const std::vector<Vertex>& vertices)
 {
     Vector3 center = {0.0f, 0.0f, 0.0f};
-
-    for(const Vertex& vertex : vertices)
+    for (const Vertex& vertex : vertices)
     {
         center.x += vertex.x;
         center.y += vertex.y;
         center.z += vertex.z;
     }
-    center.x /= vertices.size();
-    center.y /= vertices.size();
-    center.z /= vertices.size();
-    return center;
+    return {center.x / static_cast<float>(vertices.size()), center.y / static_cast<float>(vertices.size()), center.z / static_cast<float>(vertices.size())};
 }
 
-float degreesToRadians(float degrees) 
-{
-    return degrees * (M_PI / 180.0f); //Convierte grados a radianes
-}
