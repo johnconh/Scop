@@ -12,8 +12,9 @@
 
 #include "../inc/Input.h"
 
+static bool wasTPressed = false;
 
-void handleInput(GLFWwindow *window, Matrix4& model, Vector3& objectMovement, float movementSpeed, float deltaTime)
+void handleInput(GLFWwindow *window, Matrix4& model, Vector3& objectMovement, float movementSpeed, float deltaTime, bool &useTexture)
 {
     if(glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
     {
@@ -50,5 +51,18 @@ void handleInput(GLFWwindow *window, Matrix4& model, Vector3& objectMovement, fl
         objectMovement.y -= movementSpeed * deltaTime;
         Matrix4 translation = translateMatrix(0.0f, -movementSpeed, 0.0f);
         model = model * translation;
+    }
+    if(glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS)
+    {
+        if(!wasTPressed)
+        {
+            wasTPressed = true;
+            useTexture = !useTexture;
+            std::cout << "Texture: " << (useTexture ? "ON" : "OFF") << std::endl;
+        }
+    }
+    else
+    {
+        wasTPressed = false;
     }
 }

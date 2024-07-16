@@ -116,7 +116,7 @@ Matrix4 rotate(Matrix4 m, float angle, Vector3 axis) //Esta funcion rota una mat
     return result;
 }
 
-Matrix4 rotateAroundCenter(Matrix4 m, float angle, Vector3 axis, Vector3 center) //Esta funcion rota una matriz alrededor de un punto
+Matrix4 rotateAroundCenter(Matrix4 m, float angle, Vector3 axis, Vector3 center) 
 {
     Matrix4 translation = translateMatrix(-center.x, -center.y, -center.z);
     Matrix4 rotation = rotate(identity(), angle, axis);
@@ -124,7 +124,7 @@ Matrix4 rotateAroundCenter(Matrix4 m, float angle, Vector3 axis, Vector3 center)
     return translation * rotation *  invTranslation * m;
 }
 
-Matrix4 translateMatrix(float x, float y, float z)
+Matrix4 translateMatrix(float x, float y, float z) 
 {
     Matrix4 m = identity();
     m.m[3][0] = x;
@@ -144,4 +144,3 @@ Vector3 calculateObjectCenter(const std::vector<Vertex>& vertices)
     }
     return {center.x / static_cast<float>(vertices.size()), center.y / static_cast<float>(vertices.size()), center.z / static_cast<float>(vertices.size())};
 }
-

@@ -19,8 +19,11 @@
 #include "../inc/computeNormals.h"
 #include "../inc/Matrix.h"
 #include "../inc/Input.h"
+#include "../inc/Texture.h"
 
 const GLuint WIDTH = 1080, HEIGHT = 720;
+float mixfactor = 0.0f;
+bool useTexture = false;
 
 int main(int argc, char **argv)
 {
@@ -132,6 +135,7 @@ int main(int argc, char **argv)
     }
 
     GLuint shaderProgram = createShaderProgram("res/shaders/vertexShader.glsl", "res/shaders/fragmentShader.glsl");
+    GLuint textureID = loadTexture("res/textures/img.png");
 
     GLuint VBO[3], VAO;
     CHECK_GL_ERROR(glGenVertexArrays(1, &VAO));
@@ -183,7 +187,7 @@ int main(int argc, char **argv)
         double deltaTime = currenTime - lastFrameTime;
         lastFrameTime = currenTime;
 
-        handleInput(window, model, objectMovement, movementSpeed, deltaTime);
+        handleInput(window, model, objectMovement, movementSpeed, deltaTime, useTexture);
 
         float deltaAngle = rotationSpeed * deltaTime;
         model = rotateAroundCenter(model, deltaAngle, {0.0f, 1.0f, 0.0f}, OBJcenter);
@@ -216,7 +220,10 @@ int main(int argc, char **argv)
         CHECK_GL_ERROR(glUniform1f(matDLoc, materials.d));
         CHECK_GL_ERROR(glUniform1i(matIllumLoc, materials.illum));
 
+        glUniform1f(glGetUniformLocation(shaderProgram, "mixFactor"), useTexture ? 1.0f : 0.0f);
+
         CHECK_GL_ERROR(glBindVertexArray(VAO));
+        CHECK_GL_ERROR(glBindTexture(GL_TEXTURE_2D, textureID));
         CHECK_GL_ERROR(glDrawArrays(GL_TRIANGLES, 0, vertexData.size() / 3));
 
         glfwSwapBuffers(window);

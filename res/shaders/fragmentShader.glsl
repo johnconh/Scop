@@ -19,6 +19,8 @@ out vec4 FragColor;
 uniform Material material;
 uniform vec3 lightPos;
 uniform vec3 cameraPos;
+uniform float mixFactor;
+uniform sampler2D ourTexture;
 
 void main()
 {
@@ -56,5 +58,6 @@ void main()
         color = ambient + diffuse + specular;
     }
 
-    FragColor = vec4(color * ourColor, transparency);
+    vec3 result = color * ourColor;
+    FragColor = mix(vec4(result, transparency), texture(ourTexture, FragPos.xy), mixFactor);
 }
