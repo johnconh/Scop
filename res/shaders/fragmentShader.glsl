@@ -3,6 +3,7 @@
 in vec3 ourColor;
 in vec3 FragPos;
 in vec3 Normal;
+in vec2 Texture;
 
 struct Material
 {
@@ -59,5 +60,5 @@ void main()
     }
 
     vec3 result = color * ourColor;
-    FragColor = mix(vec4(result, transparency), texture(ourTexture, FragPos.xy), mixFactor);
+    FragColor = mix(vec4(result, transparency), texture(ourTexture, Texture), mixFactor);
 }

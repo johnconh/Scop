@@ -78,10 +78,18 @@ int main(int argc, char **argv)
     std::vector<Vertex> normalizedVertex;
     computeNormals(vertices, normalizedVertex);
 
-
     std::vector<float> vertexData;
     std::vector<float> colorData;
     std::vector<float> normals;
+    std::vector<float> textureData;
+    std::vector<float> textureCoords = 
+    {
+        0.0f, 0.0f,
+        1.0f, 0.0f,
+        0.0f, 1.0f,
+        1.0f, 1.0f
+    };
+
     for(size_t faceIndex = 0; faceIndex < faces.size(); faceIndex++)
     {
         const Face &face = faces[faceIndex];
@@ -105,6 +113,8 @@ int main(int argc, char **argv)
             colorData.push_back(gray);
             colorData.push_back(gray);
             colorData.push_back(gray);
+            textureData.push_back(textureCoords[i *2]);
+            textureData.push_back(textureCoords[i *2 + 1]);
 
             vertexData.push_back(vertices[face.v[i + 1] - 1].x);
             vertexData.push_back(vertices[face.v[i + 1] - 1].y);
@@ -118,6 +128,8 @@ int main(int argc, char **argv)
             colorData.push_back(gray);
             colorData.push_back(gray);
             colorData.push_back(gray);
+            textureData.push_back(textureCoords[(i + 1) * 2]);
+            textureData.push_back(textureCoords[(i + 1) * 2 + 1]);
 
             vertexData.push_back(vertices[face.v[i + 2] - 1].x);
             vertexData.push_back(vertices[face.v[i + 2] - 1].y);
@@ -131,15 +143,17 @@ int main(int argc, char **argv)
             colorData.push_back(gray);
             colorData.push_back(gray);
             colorData.push_back(gray);
+            textureData.push_back(textureCoords[(i + 2) *2]);
+            textureData.push_back(textureCoords[(i + 2) *2 + 1]);
         }
     }
 
     GLuint shaderProgram = createShaderProgram("res/shaders/vertexShader.glsl", "res/shaders/fragmentShader.glsl");
     GLuint textureID = loadTexture("res/textures/img.png");
 
-    GLuint VBO[3], VAO;
+    GLuint VBO[4], VAO;
     CHECK_GL_ERROR(glGenVertexArrays(1, &VAO));
-    CHECK_GL_ERROR(glGenBuffers(3, VBO));
+    CHECK_GL_ERROR(glGenBuffers(4, VBO));
 
     CHECK_GL_ERROR(glBindVertexArray(VAO));
 
@@ -157,6 +171,11 @@ int main(int argc, char **argv)
     CHECK_GL_ERROR(glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(float), normals.data(), GL_STATIC_DRAW));
     CHECK_GL_ERROR(glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0));
     CHECK_GL_ERROR(glEnableVertexAttribArray(2));
+
+    CHECK_GL_ERROR(glBindBuffer(GL_ARRAY_BUFFER, VBO[3]));
+    CHECK_GL_ERROR(glBufferData(GL_ARRAY_BUFFER, textureData.size() * sizeof(float), textureData.data(), GL_STATIC_DRAW));
+    CHECK_GL_ERROR(glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0));
+    CHECK_GL_ERROR(glEnableVertexAttribArray(3));
 
     CHECK_GL_ERROR(glBindBuffer(GL_ARRAY_BUFFER, 0));
     CHECK_GL_ERROR(glBindVertexArray(0));
@@ -220,10 +239,11 @@ int main(int argc, char **argv)
         CHECK_GL_ERROR(glUniform1f(matDLoc, materials.d));
         CHECK_GL_ERROR(glUniform1i(matIllumLoc, materials.illum));
 
+        CHECK_GL_ERROR(glActiveTexture(GL_TEXTURE0));
+        CHECK_GL_ERROR(glBindTexture(GL_TEXTURE_2D, textureID));
         glUniform1f(glGetUniformLocation(shaderProgram, "mixFactor"), useTexture ? 1.0f : 0.0f);
 
         CHECK_GL_ERROR(glBindVertexArray(VAO));
-        CHECK_GL_ERROR(glBindTexture(GL_TEXTURE_2D, textureID));
         CHECK_GL_ERROR(glDrawArrays(GL_TRIANGLES, 0, vertexData.size() / 3));
 
         glfwSwapBuffers(window);
@@ -231,7 +251,7 @@ int main(int argc, char **argv)
     }
 
     CHECK_GL_ERROR(glDeleteVertexArrays(1, &VAO));
-    CHECK_GL_ERROR(glDeleteBuffers(3, VBO));
+    CHECK_GL_ERROR(glDeleteBuffers(4, VBO));
     CHECK_GL_ERROR(glDeleteProgram(shaderProgram));
     glfwTerminate();
     return 0;
