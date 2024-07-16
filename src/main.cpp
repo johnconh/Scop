@@ -84,10 +84,12 @@ int main(int argc, char **argv)
     std::vector<float> textureData;
     std::vector<float> textureCoords = 
     {
-        0.0f, 0.0f,
-        1.0f, 0.0f,
-        0.0f, 1.0f,
-        1.0f, 1.0f
+        0.0f, 0.0f,  // lower-left corner of the first triangle
+        1.0f, 0.0f,  // lower-right corner of the first triangle
+        0.0f, 1.0f,  // upper-left corner of the first triangle
+        1.0f, 1.0f,  // upper-right corner of the first triangle (also the lower-left corner of the second triangle)
+        0.0f, 0.0f,  // lower-right corner of the second triangle
+        1.0f, 0.0f   // upper-right corner of the second triangle
     };
 
     for(size_t faceIndex = 0; faceIndex < faces.size(); faceIndex++)
