@@ -11,11 +11,12 @@
 /* ************************************************************************** */
 
 #include "../inc/Texture.h"
+#include "../inc/checkGLError.h"
 
 GLuint loadTexture(const char* path)
 {
     GLuint textureID;
-    glGenTextures(1, &textureID);
+    CHECK_GL_ERROR(glGenTextures(1, &textureID));
 
     int width, height, nrComponents;
     stbi_set_flip_vertically_on_load(true);
@@ -30,14 +31,14 @@ GLuint loadTexture(const char* path)
         else if (nrComponents == 4)
             format = GL_RGBA;
 
-        glBindTexture(GL_TEXTURE_2D, textureID);
-        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
+        CHECK_GL_ERROR(glBindTexture(GL_TEXTURE_2D, textureID));
+        CHECK_GL_ERROR(glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data));
+        CHECK_GL_ERROR(glGenerateMipmap(GL_TEXTURE_2D));
 
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        CHECK_GL_ERROR(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
+        CHECK_GL_ERROR (glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
+        CHECK_GL_ERROR(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR));
+        CHECK_GL_ERROR(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
 
         stbi_image_free(data);
     }

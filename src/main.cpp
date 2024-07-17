@@ -34,7 +34,8 @@ int main(int argc, char **argv)
     }
 
     std::string objFile = argv[1];
-    if(objFile.substr(objFile.find_last_of(".") + 1) != "obj")
+    size_t pos = objFile.find(".");
+    if(pos == std::string::npos || objFile.substr(pos) != ".obj")
     {
         std::cerr << "Invalid file format. Please provide a .obj file" << std::endl;
         return -1;
@@ -84,12 +85,12 @@ int main(int argc, char **argv)
     std::vector<float> textureData;
     std::vector<float> textureCoords = 
     {
-        0.0f, 0.0f,  // lower-left corner of the first triangle
-        1.0f, 0.0f,  // lower-right corner of the first triangle
-        0.0f, 1.0f,  // upper-left corner of the first triangle
-        1.0f, 1.0f,  // upper-right corner of the first triangle (also the lower-left corner of the second triangle)
-        0.0f, 0.0f,  // lower-right corner of the second triangle
-        1.0f, 0.0f   // upper-right corner of the second triangle
+        0.0f, 0.0f,
+        1.0f, 0.0f,
+        0.0f, 1.0f,
+        1.0f, 1.0f,
+        0.0f, 0.0f,
+        1.0f, 0.0f
     };
 
     for(size_t faceIndex = 0; faceIndex < faces.size(); faceIndex++)

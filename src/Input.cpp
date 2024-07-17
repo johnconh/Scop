@@ -58,7 +58,6 @@ void handleInput(GLFWwindow *window, Matrix4& model, Vector3& objectMovement, fl
         {
             wasTPressed = true;
             useTexture = !useTexture;
-            std::cout << "Texture: " << (useTexture ? "ON" : "OFF") << std::endl;
         }
     }
     else
