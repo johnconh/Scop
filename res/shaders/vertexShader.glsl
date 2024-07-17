@@ -7,7 +7,7 @@ layout(location = 3) in vec2 aTexture;
 out vec3 ourColor;
 out vec3 FragPos;
 out vec3 Normal;
-varying vec2 Texture;
+out vec2 Texture;
 
 uniform mat4 model;
 uniform mat4 view;

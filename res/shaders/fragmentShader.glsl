@@ -3,7 +3,7 @@
 in vec3 ourColor;
 in vec3 FragPos;
 in vec3 Normal;
-varying vec2 Texture;
+in vec2 Texture;
 
 struct Material
 {

@@ -101,7 +101,6 @@ int main(int argc, char **argv)
         // float b = static_cast <float> (faceIndex % 3 == 2);
         float gray = static_cast<float>(faceIndex) / static_cast<float>(faces.size());
 
-
         for(size_t i = 0; i < face.v.size() - 2; i++)
         {
             vertexData.push_back(vertices[face.v[0] - 1].x);
@@ -116,8 +115,8 @@ int main(int argc, char **argv)
             colorData.push_back(gray);
             colorData.push_back(gray);
             colorData.push_back(gray);
-            textureData.push_back(textureCoords[i *2]);
-            textureData.push_back(textureCoords[i *2 + 1]);
+            textureData.push_back(textureCoords[i * 2]);
+            textureData.push_back(textureCoords[i * 2 + 1]);
 
             vertexData.push_back(vertices[face.v[i + 1] - 1].x);
             vertexData.push_back(vertices[face.v[i + 1] - 1].y);
