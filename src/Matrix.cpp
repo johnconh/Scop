@@ -144,3 +144,20 @@ Vector3 calculateObjectCenter(const std::vector<Vertex>& vertices)
     }
     return {center.x / static_cast<float>(vertices.size()), center.y / static_cast<float>(vertices.size()), center.z / static_cast<float>(vertices.size())};
 }
+
+
+std::vector<Vector2> generateUV(const std::vector<Vertex>& vertices, const Vector3 normal, const Vector3 origin)
+{
+    std::vector<Vector2> uvs(vertices.size());
+
+    Vector3 uAxis = normalize(cross(Vector3(0, 1, 0), normal));
+    Vector3 vAxis = normalize(cross(normal, uAxis));
+
+    for(size_t i = 0; i < vertices.size(); i++)
+    {
+        const Vector3& relativePos = Vector3(vertices[i].x, vertices[i].y, vertices[i].z) - origin;
+        uvs[i] = Vector2(dot(relativePos, uAxis), dot(relativePos, vAxis));
+    }
+
+    return uvs;
+}

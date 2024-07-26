@@ -1,28 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Vector3.h                                          :+:      :+:    :+:   */
+/*   Vector2.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jdasilva <jdasilva@student.42.fr>          #+#  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024-07-10 15:45:53 by jdasilva          #+#    #+#             */
-/*   Updated: 2024-07-10 15:45:53 by jdasilva         ###   ########.fr       */
+/*   Created: 2024-07-26 14:48:10 by jdasilva          #+#    #+#             */
+/*   Updated: 2024-07-26 14:48:10 by jdasilva         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+ 
+#ifndef VECTOR2_H
+#define VECTOR2_H
 
-#ifndef VECTOR3_H
-#define VECTOR3_H
-
-struct Vector3
+struct Vector2
 {
-    float x, y, z;
+    float x, y;
 
-    Vector3(float x, float y, float z) : x(x), y(y), z(z) {}
-    
-    Vector3 operator-(const Vector3& other) const
-    {
-        return Vector3(x - other.x, y - other.y, z - other.z);
-    }
+    Vector2(float x, float y) : x(x), y(y) {}
+
+    Vector2(): x(0), y(0) {}
 };
 
 #endif

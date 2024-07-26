@@ -79,19 +79,12 @@ int main(int argc, char **argv)
     std::vector<Vertex> normalizedVertex;
     computeNormals(vertices, normalizedVertex);
 
+    std::vector<Vector2> uvs = generateUV(vertices, Vector3(1,0,0), Vector3(0,0,0));
+
     std::vector<float> vertexData;
     std::vector<float> colorData;
     std::vector<float> normals;
     std::vector<float> textureData;
-    std::vector<float> textureCoords = 
-    {
-        0.0f, 0.0f,
-        1.0f, 0.0f,
-        0.0f, 1.0f,
-        1.0f, 1.0f,
-        0.0f, 0.0f,
-        1.0f, 0.0f
-    };
 
     for(size_t faceIndex = 0; faceIndex < faces.size(); faceIndex++)
     {
@@ -115,8 +108,8 @@ int main(int argc, char **argv)
             colorData.push_back(gray);
             colorData.push_back(gray);
             colorData.push_back(gray);
-            textureData.push_back(textureCoords[i * 2]);
-            textureData.push_back(textureCoords[i * 2 + 1]);
+            textureData.push_back(uvs[face.v[0] - 1].x);
+            textureData.push_back(uvs[face.v[0] - 1].y);
 
             vertexData.push_back(vertices[face.v[i + 1] - 1].x);
             vertexData.push_back(vertices[face.v[i + 1] - 1].y);
@@ -130,8 +123,8 @@ int main(int argc, char **argv)
             colorData.push_back(gray);
             colorData.push_back(gray);
             colorData.push_back(gray);
-            textureData.push_back(textureCoords[(i + 1) * 2]);
-            textureData.push_back(textureCoords[(i + 1) * 2 + 1]);
+            textureData.push_back(uvs[face.v[i + 1] -1].x);
+            textureData.push_back(uvs[face.v[i + 1] - 1].y);
 
             vertexData.push_back(vertices[face.v[i + 2] - 1].x);
             vertexData.push_back(vertices[face.v[i + 2] - 1].y);
@@ -145,13 +138,13 @@ int main(int argc, char **argv)
             colorData.push_back(gray);
             colorData.push_back(gray);
             colorData.push_back(gray);
-            textureData.push_back(textureCoords[(i + 2) *2]);
-            textureData.push_back(textureCoords[(i + 2) *2 + 1]);
+            textureData.push_back(uvs[face.v[i + 2] - 1].x);
+            textureData.push_back(uvs[face.v[i + 2] - 1].y);
         }
     }
 
     GLuint shaderProgram = createShaderProgram("res/shaders/vertexShader.glsl", "res/shaders/fragmentShader.glsl");
-    GLuint textureID = loadTexture("res/textures/img.png");
+    GLuint textureID = loadTexture("res/textures/img.bmp");
 
     GLuint VBO[4], VAO;
     CHECK_GL_ERROR(glGenVertexArrays(1, &VAO));

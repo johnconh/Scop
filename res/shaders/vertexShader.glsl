@@ -17,7 +17,7 @@ void main()
 {
     gl_Position = projection * view * model * vec4(aPos, 1.0);
     FragPos = vec3(model * vec4(aPos, 1.0));
-    Normal = mat3(transpose(inverse(model))) * aNormal;
+    Normal = normalize (aNormal);
     ourColor = aColor;
-    Texture = aTexture;
+    Texture = vec2(aTexture.x, aTexture.y);
 }

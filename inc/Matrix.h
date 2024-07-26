@@ -19,6 +19,7 @@
 #include <vector>
 #include "Vector3.h"
 #include "Vertex.h"
+#include "Vector2.h"
 
 struct Matrix4 
 {
@@ -67,5 +68,6 @@ Matrix4 rotate(Matrix4 m, float angle, Vector3 axis);
 Matrix4 translateMatrix(float x, float y, float z);
 Matrix4 rotateAroundCenter(Matrix4 m, float angle, Vector3 axis, Vector3 center);
 Vector3 calculateObjectCenter(const std::vector<Vertex>& vertices);
+std::vector<Vector2> generateUV(const std::vector<Vertex>& vertices, const Vector3 normal, const Vector3 origin);
 
 #endif
