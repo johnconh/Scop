@@ -46,6 +46,8 @@ void main()
     vec3 diffuse = diffuseStrength * diffuseColor;
     vec3 specular = specularStrength * specularColor;
 
+    vec4 textColor = texture(ourTexture, Texture);
+
     if (material.illum == 0)
     {
         color = ambientColor;
@@ -59,6 +61,6 @@ void main()
         color = ambient + diffuse + specular;
     }
 
-    vec3 result = color * ourColor;
-    FragColor = mix(vec4(result, transparency), texture(ourTexture, Texture), mixFactor);
+    vec3 finalColor = mix(color * ourColor, textColor.rgb, mixFactor);
+    FragColor = vec4(finalColor, transparency);
 }
