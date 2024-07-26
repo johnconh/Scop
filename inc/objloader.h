@@ -18,8 +18,6 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
-#include <iomanip>
-#include <filesystem>
 #include "Vector3.h"
 #include "Vertex.h"
 

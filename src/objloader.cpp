@@ -12,12 +12,10 @@
 
 #include "../inc/objloader.h"
 
-void loadMTL(const char * path, Material & out_materials)
+void loadMTL(const char* path, Material & out_materials)
 {
-    std::filesystem::path p(path);
-    p.replace_extension(".mtl");
-
-    std::ifstream file(p.string());
+    std::string fullPath = std::string("resources/") + path;
+    std::ifstream file(fullPath);
     if (!file.is_open())
     {
         std::cerr << "Failed to open file" << std::endl;
@@ -95,6 +93,7 @@ void loadMTL(const char * path, Material & out_materials)
 void loadOBJ(const char * path, std::vector<Vertex> & out_vertices, std::vector<Face> & out_faces, Material & out_materials)
 {
     std::ifstream file(path);
+
     if (!file.is_open())
     {
         std::cerr << "Failed to open file" << std::endl;
@@ -121,9 +120,11 @@ void loadOBJ(const char * path, std::vector<Vertex> & out_vertices, std::vector<
                 face.v.push_back(v);
             out_faces.push_back(face);
         }
-        else if (type == "usemtl")
+        else if (type == "mtllib")
         {
-            loadMTL(path, out_materials);
+            std::string material;
+            iss >> material;
+            loadMTL(material.c_str(), out_materials);
         }
     }
 
