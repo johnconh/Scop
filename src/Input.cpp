@@ -13,9 +13,10 @@
 #include "../inc/Input.h"
 
 static bool wasTPressed = false;
+static bool wasYPressed = false;
 static bool wasCPressed = false;
 
-void handleInput(GLFWwindow *window, Matrix4& model, Vector3& objectMovement, float movementSpeed, float deltaTime, bool &useTexture)
+void handleInput(GLFWwindow *window, Matrix4& model, Vector3& objectMovement, float movementSpeed, float deltaTime, bool &useTexture, bool& wireframeMode)
 {
     if(glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
     {
@@ -64,6 +65,18 @@ void handleInput(GLFWwindow *window, Matrix4& model, Vector3& objectMovement, fl
     else
     {
         wasTPressed = false;
+    }
+    if(glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS)
+    {
+        if(!wasYPressed)
+        {
+            wasYPressed = true;
+            wireframeMode = !wireframeMode;
+        }
+    }
+    else
+    {
+        wasYPressed = false;
     }
 }
 

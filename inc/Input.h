@@ -18,7 +18,7 @@
 #include "Matrix.h"
 #include "objloader.h"
 
-void handleInput(GLFWwindow *window, Matrix4& model, Vector3& objectmovement, float movementSpeed, float deltaTime, bool &useTexture);
+void handleInput(GLFWwindow *window, Matrix4& model, Vector3& objectmovement, float movementSpeed, float deltaTime, bool &useTexture, bool& wireframeMode);
 void handleColor(GLFWwindow *window, GLuint colorBuffer, const std::vector<Face>& faces, std::vector<float> colorData, bool &useColor);
 void handleCameraMove(GLFWwindow *window, Vector3& cameraPos);
 #endif

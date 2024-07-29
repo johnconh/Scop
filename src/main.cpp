@@ -25,6 +25,7 @@ const GLuint WIDTH = 1080, HEIGHT = 720;
 float mixfactor = 0.0f;
 bool useTexture = false;
 bool useColor = false;
+bool wireframeMode = false;
 
 int main(int argc, char **argv)
 {
@@ -190,7 +191,7 @@ int main(int argc, char **argv)
         double deltaTime = currenTime - lastFrameTime;
         lastFrameTime = currenTime;
 
-        handleInput(window, model, objectMovement, movementSpeed, deltaTime, useTexture);
+        handleInput(window, model, objectMovement, movementSpeed, deltaTime, useTexture, wireframeMode);
         handleColor(window, VBO[1], faces, colorData, useColor);
         handleCameraMove(window, cameraPos);
         view = lookAt(cameraPos, {0.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f});
@@ -233,6 +234,7 @@ int main(int argc, char **argv)
         CHECK_GL_ERROR(glBindVertexArray(VAO));
         CHECK_GL_ERROR(glDrawArrays(GL_TRIANGLES, 0, vertexData.size() / 3));
 
+        glPolygonMode(GL_FRONT_AND_BACK, wireframeMode ? GL_LINE : GL_FILL);
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
