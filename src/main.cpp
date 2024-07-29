@@ -192,6 +192,8 @@ int main(int argc, char **argv)
 
         handleInput(window, model, objectMovement, movementSpeed, deltaTime, useTexture);
         handleColor(window, VBO[1], faces, colorData, useColor);
+        handleCameraMove(window, cameraPos);
+        view = lookAt(cameraPos, {0.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f});
 
         float deltaAngle = rotationSpeed * deltaTime;
         model = rotateAroundCenter(model, deltaAngle, {0.0f, 1.0f, 0.0f}, OBJcenter);

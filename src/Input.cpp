@@ -118,3 +118,21 @@ void handleColor(GLFWwindow *window, GLuint colorBuffer, const std::vector<Face>
     }
     wasCPressed = isCPressed;
 }
+
+void handleCameraMove(GLFWwindow *window, Vector3& cameraPos)
+{
+    const float moveSpeed = 0.1f;
+    
+    if (glfwGetKey(window, GLFW_KEY_KP_4) == GLFW_PRESS)
+        cameraPos.x -= moveSpeed; 
+    if (glfwGetKey(window, GLFW_KEY_KP_6) == GLFW_PRESS)
+        cameraPos.x += moveSpeed; 
+    if (glfwGetKey(window, GLFW_KEY_KP_8) == GLFW_PRESS)
+        cameraPos.y += moveSpeed; 
+    if (glfwGetKey(window, GLFW_KEY_KP_2) == GLFW_PRESS)
+        cameraPos.y -= moveSpeed; 
+    if (glfwGetKey(window, GLFW_KEY_KP_ADD) == GLFW_PRESS)
+        cameraPos.z -= moveSpeed; 
+    if (glfwGetKey(window, GLFW_KEY_KP_SUBTRACT) == GLFW_PRESS)
+        cameraPos.z += moveSpeed;
+}
