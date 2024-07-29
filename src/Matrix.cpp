@@ -153,10 +153,22 @@ std::vector<Vector2> generateUV(const std::vector<Vertex>& vertices, const Vecto
     Vector3 uAxis = normalize(cross(Vector3(0, 1, 0), normal));
     Vector3 vAxis = normalize(cross(normal, uAxis));
 
+    float maxU = 0.0f;
+    float maxV = 0.0f;
+
     for(size_t i = 0; i < vertices.size(); i++)
     {
         const Vector3& relativePos = Vector3(vertices[i].x, vertices[i].y, vertices[i].z) - origin;
         uvs[i] = Vector2(dot(relativePos, uAxis), dot(relativePos, vAxis));
+
+        maxU = std::max(maxU, std::abs(uvs[i].x));
+        maxV = std::max(maxV, std::abs(uvs[i].y));
+    }
+
+    for(Vector2& uv : uvs)
+    {
+        uv.x /= maxU;
+        uv.y /= maxV;
     }
 
     return uvs;

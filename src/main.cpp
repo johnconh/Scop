@@ -24,6 +24,7 @@
 const GLuint WIDTH = 1080, HEIGHT = 720;
 float mixfactor = 0.0f;
 bool useTexture = false;
+bool useColor = false;
 
 int main(int argc, char **argv)
 {
@@ -79,7 +80,7 @@ int main(int argc, char **argv)
     std::vector<Vertex> normalizedVertex;
     computeNormals(vertices, normalizedVertex);
 
-    std::vector<Vector2> uvs = generateUV(vertices, Vector3(1,0,0), Vector3(0,0,0));
+    std::vector<Vector2> uvs = generateUV(vertices, Vector3(1,0,1), Vector3(0,0,0));
 
     std::vector<float> vertexData;
     std::vector<float> colorData;
@@ -89,9 +90,6 @@ int main(int argc, char **argv)
     for(size_t faceIndex = 0; faceIndex < faces.size(); faceIndex++)
     {
         const Face &face = faces[faceIndex];
-        // float r = static_cast <float> (faceIndex % 3 == 0);
-        // float g = static_cast <float> (faceIndex % 3 == 1);
-        // float b = static_cast <float> (faceIndex % 3 == 2);
         float gray = static_cast<float>(faceIndex) / static_cast<float>(faces.size());
 
         for(size_t i = 0; i < face.v.size() - 2; i++)
@@ -102,9 +100,6 @@ int main(int argc, char **argv)
             normals.push_back(normalizedVertex[face.v[0] - 1].x);
             normals.push_back(normalizedVertex[face.v[0] - 1].y);
             normals.push_back(normalizedVertex[face.v[0] - 1].z);
-            // colorData.push_back(r);
-            // colorData.push_back(g);
-            // colorData.push_back(b);
             colorData.push_back(gray);
             colorData.push_back(gray);
             colorData.push_back(gray);
@@ -117,9 +112,6 @@ int main(int argc, char **argv)
             normals.push_back(normalizedVertex[face.v[i + 1] - 1].x);
             normals.push_back(normalizedVertex[face.v[i + 1] - 1].y);
             normals.push_back(normalizedVertex[face.v[i + 1] - 1].z);
-            // colorData.push_back(r);
-            // colorData.push_back(g);
-            // colorData.push_back(b);
             colorData.push_back(gray);
             colorData.push_back(gray);
             colorData.push_back(gray);
@@ -132,9 +124,6 @@ int main(int argc, char **argv)
             normals.push_back(normalizedVertex[face.v[i + 2] - 1].x);
             normals.push_back(normalizedVertex[face.v[i + 2] - 1].y);
             normals.push_back(normalizedVertex[face.v[i + 2] - 1].z);
-            // colorData.push_back(r);
-            // colorData.push_back(g);
-            // colorData.push_back(b);
             colorData.push_back(gray);
             colorData.push_back(gray);
             colorData.push_back(gray);
@@ -202,6 +191,7 @@ int main(int argc, char **argv)
         lastFrameTime = currenTime;
 
         handleInput(window, model, objectMovement, movementSpeed, deltaTime, useTexture);
+        handleColor(window, VBO[1], faces, colorData, useColor);
 
         float deltaAngle = rotationSpeed * deltaTime;
         model = rotateAroundCenter(model, deltaAngle, {0.0f, 1.0f, 0.0f}, OBJcenter);
