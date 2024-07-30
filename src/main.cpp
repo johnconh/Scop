@@ -132,6 +132,9 @@ int main(int argc, char **argv)
             textureData.push_back(uvs[face.v[i + 2] - 1].y);
         }
     }
+    // for(size_t i = 0; i < vertexData.size(); i += 3) {
+    //     std::cout << "Vertex " << (i/3) + 1 << ": (" << vertexData[i] << ", " << vertexData[i+1] << ", " << vertexData[i+2] << ")" << std::endl;
+    // }
 
     GLuint shaderProgram = createShaderProgram("res/shaders/vertexShader.glsl", "res/shaders/fragmentShader.glsl");
     GLuint textureID = loadTexture("res/textures/img.bmp");

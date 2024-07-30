@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../inc/objloader.h"
+#include <iomanip>
 
 void loadMTL(const char* path, Material & out_materials)
 {
