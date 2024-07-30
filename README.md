@@ -63,7 +63,10 @@ Utilizo funciones GLFW básicas para manejar las entradas.
     Cambio de textura a color Tecla T.
     Cambio de color gris a color RGB: Tecla C.
     Cambio al modo WireFrame: Tecla Y.
-    
+
 ```
 
+## Como Ejecutar
 
+- Make
+- ./scop path/to/your/model.obj
