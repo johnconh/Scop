@@ -19,7 +19,7 @@ void loadMTL(const char* path, Material & out_materials)
     std::ifstream file(fullPath);
     if (!file.is_open())
     {
-        std::cerr << "Failed to open file" << std::endl;
+        std::cerr << "Failed to open Material file " << std::endl;
         return;
     }
 
@@ -97,7 +97,7 @@ void loadOBJ(const char * path, std::vector<Vertex> & out_vertices, std::vector<
 
     if (!file.is_open())
     {
-        std::cerr << "Failed to open file" << std::endl;
+        std::cerr << "2 Failed to open file" << std::endl;
         return;
     }
 
@@ -116,9 +116,12 @@ void loadOBJ(const char * path, std::vector<Vertex> & out_vertices, std::vector<
         else if (type == "f")
         {
             Face face;
-            unsigned int v;
-            while(iss >> v)
+            std::string v_str;
+            while(iss >> v_str)
+            {
+                unsigned int v = std::stoi(v_str);
                 face.v.push_back(v);
+            }
             out_faces.push_back(face);
         }
         else if (type == "mtllib")
@@ -129,11 +132,10 @@ void loadOBJ(const char * path, std::vector<Vertex> & out_vertices, std::vector<
         }
     }
 
-
     // std::cout << "Loaded " << out_vertices.size() << " vertices" << std::endl;
     // std::cout << "Loaded " << out_faces.size() << " faces" << std::endl;
 
-    // for (size_t i = 0; i < std::min(size_t(5), out_vertices.size()); i++)
+    // for (size_t i = 0; i < out_vertices.size(); i++)
     // {
     //     std::cout << std::fixed << std::setprecision(6);
     //     std::cout << "Vertex " << i << ": " << out_vertices[i].x << " " << out_vertices[i].y << " " << out_vertices[i].z << std::endl;
@@ -146,7 +148,7 @@ void loadOBJ(const char * path, std::vector<Vertex> & out_vertices, std::vector<
     //     std::cout << "Vertex " << i << ": " << out_vertices[i].x << " " << out_vertices[i].y << " " << out_vertices[i].z << std::endl;
     // }
 
-    // for (size_t i = 0; i < std::min(size_t(5), out_faces.size()); i++)
+    // for (size_t i = 0; i < out_faces.size(); i++)
     // {
     //     std::cout << "Face " << i << ": ";
     //     for (size_t j = 0; j < out_faces[i].v.size(); j++)
