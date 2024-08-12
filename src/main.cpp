@@ -26,6 +26,7 @@ float mixfactor = 0.0f;
 bool useTexture = false;
 bool useColor = false;
 bool wireframeMode = false;
+bool rotationMode =  true;
 
 int main(int argc, char **argv)
 {
@@ -198,10 +199,13 @@ int main(int argc, char **argv)
         handleColor(window, VBO[1], faces, colorData, useColor);
         handleCameraMove(window, cameraPos);
         view = lookAt(cameraPos, {0.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f});
-
         float deltaAngle = rotationSpeed * deltaTime;
-        model = rotateAroundCenter(model, deltaAngle, {0.0f, 1.0f, 0.0f}, OBJcenter);
-        
+        if(glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
+            rotationMode = !rotationMode;
+        if (rotationMode)
+            model = rotateAroundCenter(model, deltaAngle, {0.0f, 1.0f, 0.0f}, OBJcenter);
+        else
+            handleRotation(window, model, deltaAngle, OBJcenter);
         GLint modelLoc = glGetUniformLocation(shaderProgram, "model");
         GLint viewLoc = glGetUniformLocation(shaderProgram, "view");
         GLint projLoc = glGetUniformLocation(shaderProgram, "projection");
@@ -241,7 +245,6 @@ int main(int argc, char **argv)
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
-
     CHECK_GL_ERROR(glDeleteVertexArrays(1, &VAO));
     CHECK_GL_ERROR(glDeleteBuffers(4, VBO));
     CHECK_GL_ERROR(glDeleteProgram(shaderProgram));

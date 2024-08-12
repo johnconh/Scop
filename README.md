@@ -59,11 +59,20 @@ Utilizo funciones GLFW básicas para manejar las entradas.
         Tecla 6: Derecha
         Tecla +: Acercarse
         Tecla -: Alejarse
-    
+
+
     Cambio de textura a color Tecla T.
     Cambio de color gris a color RGB: Tecla C.
     Cambio al modo WireFrame: Tecla Y.
+    Activar/desactivar la rotacion y manejarla: Tecla R
 
+    Mover la rotacion:
+        Tecla 7: Rotacion Y positiva
+        Tecla 9: Rotacion Y negativa
+        Tecla 1: Rotacion X positiva
+        Tecla 3: Rotacion X negativa
+        Tecla /: Rotacion Z positiva
+        Tecla *: Rotacion Z negativa
 ```
 
 ## Como Ejecutar

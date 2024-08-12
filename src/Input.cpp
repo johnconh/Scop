@@ -149,3 +149,37 @@ void handleCameraMove(GLFWwindow *window, Vector3& cameraPos)
     if (glfwGetKey(window, GLFW_KEY_KP_SUBTRACT) == GLFW_PRESS)
         cameraPos.z += moveSpeed;
 }
+
+void handleRotation(GLFWwindow *window, Matrix4& model, float deltaAngle, Vector3 OBJcenter)
+{
+    if (glfwGetKey(window, GLFW_KEY_KP_7) == GLFW_PRESS)
+    {
+        Matrix4 rotation = rotateAroundCenter(model, deltaAngle, {0.0f, 1.0f, 0.0f}, OBJcenter);
+        model = rotation;
+    }
+    if (glfwGetKey(window, GLFW_KEY_KP_9) == GLFW_PRESS)
+    {
+        Matrix4 rotation = rotateAroundCenter(model, -deltaAngle, {0.0f, 1.0f, 0.0f}, OBJcenter);
+        model = rotation;
+    }
+    if (glfwGetKey(window, GLFW_KEY_KP_1) == GLFW_PRESS)
+    {
+        Matrix4 rotation = rotateAroundCenter(model, deltaAngle, {1.0f, 0.0f, 0.0f}, OBJcenter);
+        model = rotation;
+    }
+    if (glfwGetKey(window, GLFW_KEY_KP_3) == GLFW_PRESS)
+    {
+        Matrix4 rotation = rotateAroundCenter(model, -deltaAngle, {1.0f, 0.0f, 0.0f}, OBJcenter);
+        model = rotation;
+    }
+    if (glfwGetKey(window, GLFW_KEY_KP_DIVIDE) == GLFW_PRESS)
+    {
+        Matrix4 rotation = rotateAroundCenter(model, deltaAngle, {0.0f, 0.0f, 1.0f}, OBJcenter);
+        model = rotation;
+    }
+    if (glfwGetKey(window, GLFW_KEY_KP_MULTIPLY) == GLFW_PRESS)
+    {
+        Matrix4 rotation = rotateAroundCenter(model, -deltaAngle, {0.0f, 0.0f, 1.0f}, OBJcenter);
+        model = rotation;
+    }
+}

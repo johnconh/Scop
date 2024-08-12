@@ -21,4 +21,5 @@
 void handleInput(GLFWwindow *window, Matrix4& model, Vector3& objectmovement, float movementSpeed, float deltaTime, bool &useTexture, bool& wireframeMode);
 void handleColor(GLFWwindow *window, GLuint colorBuffer, const std::vector<Face>& faces, std::vector<float> colorData, bool &useColor);
 void handleCameraMove(GLFWwindow *window, Vector3& cameraPos);
+void handleRotation(GLFWwindow *window, Matrix4& model, float deltaAngle, Vector3 OBJcenter);
 #endif
