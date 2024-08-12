@@ -77,5 +77,6 @@ Utilizo funciones GLFW básicas para manejar las entradas.
 
 ## Como Ejecutar
 
+- Ejecutar el programa en vuestro Escritorio(Desktop)
 - Make
 - ./scop path/to/your/model.obj
