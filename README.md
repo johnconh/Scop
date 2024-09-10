@@ -80,3 +80,9 @@ Utilizo funciones GLFW básicas para manejar las entradas.
 - Ejecutar el programa en vuestro Escritorio(Desktop)
 - Make
 - ./scop path/to/your/model.obj
+
+### IMAGENES
+
+1. ![Imagen 1](https://github.com/johnconh/Scop/blob/main/img/Car.png)
+2. ![Imagen 2](https://github.com/johnconh/Scop/blob/main/img/Canroller.png)
+3. ![Imagen 3]([https://ruta/a/tu/imagen3.png](https://github.com/johnconh/Scop/blob/main/img/Craneo.png))
